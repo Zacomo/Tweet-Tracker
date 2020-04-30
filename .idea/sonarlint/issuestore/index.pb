@@ -16,3 +16,5 @@ F
 TweetTracker.iml,a/0/a0a0564ab721136cb2d5e35a75cedad2d55aee0e
 D
 src/sample/Main.java,a/d/ad8e8bd4ff8f02a914e3d9ca1bcc32dfc8c503a9
+S
+#.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
