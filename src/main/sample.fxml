@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="568.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="568.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
       <TextField id="searchBar" fx:id="searchBar" layoutX="96.0" layoutY="32.0" prefHeight="26.0" prefWidth="399.0" promptText="Parole chiave" />
       <Button id="searchButton" fx:id="searchButton" layoutX="495.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchTweets" text="Vai" />
