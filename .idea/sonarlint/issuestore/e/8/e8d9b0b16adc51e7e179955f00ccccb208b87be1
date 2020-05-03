@@ -1,0 +1,11 @@
+
+e
+java:S2095="HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8ñ§›üœ.
+E
+java:S1148B"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ§›üœ.
+
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(áŠ¼¬8ıÿ¤üœ.
+E
+java:S11483"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8é¼Šüœ.
+M
+java:S1128	"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ú˜éüœ.
