@@ -26,8 +26,9 @@ public class TweetHandler {
         return tf.getInstance();
     }
 
-    public ArrayList<String> search(String searchTerm){
+    public ArrayList<Status> search(String searchTerm){
         ArrayList<String> tweetsFound = new ArrayList<>();
+        ArrayList<Status> statusFound = new ArrayList<>();
 
         Twitter twitter = getTwitterInstance();
         Query query = new Query(searchTerm);
@@ -46,6 +47,7 @@ public class TweetHandler {
                 count++;
                 tweetsFound.add("Tweet #" + Integer.toString(count) + ": @" + tweet.getUser().getName() + " tweeted" +
                         "\"" + tweet.getText() + "\" \n");
+                statusFound.add(tweet);
             }
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -53,7 +55,7 @@ public class TweetHandler {
 
         fileUpdate(tweetsFound);
 
-        return tweetsFound;
+        return statusFound;
     }
 
     private void fileUpdate(ArrayList<String> tweetsFound){
