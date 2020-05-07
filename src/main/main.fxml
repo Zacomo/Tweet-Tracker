@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.lynden.gmapsfx.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
+      <Button layoutX="587.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
       <TextField id="searchBar" fx:id="searchBar" layoutX="96.0" layoutY="32.0" prefHeight="26.0" prefWidth="399.0" promptText="Parole chiave" />
       <Button id="searchButton" fx:id="searchButton" layoutX="495.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchTweets" text="Vai" />
-      <ListView id="listViewTweet" fx:id="listViewTweet" layoutX="679.0" layoutY="70.0" prefHeight="516.0" prefWidth="343.0" />
-      <GoogleMapView id="mapView" fx:id="mapView" layoutX="22.0" layoutY="70.0" prefHeight="557.0" prefWidth="657.0" />
+      <ListView id="listViewTweet" fx:id="listViewTweet" layoutX="30.0" layoutY="70.0" prefHeight="516.0" prefWidth="997.0" />
    </children>
 </AnchorPane>

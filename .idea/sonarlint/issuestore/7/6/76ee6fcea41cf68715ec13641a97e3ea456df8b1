@@ -1,2 +1,10 @@
 
-Z	java:S106"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8™Â¬üœ.
+I
+java:S1068"'Remove this unused "lon" private field.(Ñ”ıüÿÿÿÿ8™ÕéÏ.
+C
+java:S1659"!Declare "lon" on a separate line.(Ñ”ıüÿÿÿÿ8úÃÈË.
+I
+java:S1068"'Remove this unused "lat" private field.(Ñ”ıüÿÿÿÿ8™ÕéÏ.
+w
+java:S1450!"[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
+Z	java:S106X"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8óÜË.

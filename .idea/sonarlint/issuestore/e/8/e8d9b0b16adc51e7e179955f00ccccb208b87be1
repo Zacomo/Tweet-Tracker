@@ -1,11 +1,13 @@
 
 e
-java:S2095="HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8ñ§›üœ.
+java:S2095B"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8ñ§›üœ.
+
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÅØ·«8Ùğ‘.
 E
-java:S1148B"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ§›üœ.
-
-java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(áŠ¼¬8ıÿ¤üœ.
-E
-java:S11483"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8é¼Šüœ.
+java:S1148G"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ§›üœ.
 M
-java:S1128	"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ú˜éüœ.
+java:S1128	"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ÜÀ¯Í.
+E
+java:S11488"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8é¼Šüœ.
+
+java:S1319!"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¦Ó‘8æëŞÍ.
