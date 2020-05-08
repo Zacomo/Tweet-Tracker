@@ -12,8 +12,6 @@ f
 TweetTracker.iml,a/0/a0a0564ab721136cb2d5e35a75cedad2d55aee0e
 S
 #.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
-D
-src/main/sample.fxml,e/b/ebd87776fb0593089b98bbc0d4aa7fc11d458da6
 B
 src/main/Main.java,f/e/fe03b4fd3afe162c6e01309b98a22588e093d274
 H
@@ -23,3 +21,9 @@ J
 :
 
 tweets.txt,2/7/27e3179c7ee927b00b1eea05a14ecfe2c8e76e78
+A
+src/main/map.fxml,1/9/19b7b9d4c3a2c649003158854eb358f5e76ee2b2
+B
+src/main/main.fxml,c/e/ce115b2bf7dd0f30227f9298a55edb3e5574de6a
+K
+src/main/MapController.java,8/5/858d9de6b63c14263d5e0857ef7538f3ae4cf198

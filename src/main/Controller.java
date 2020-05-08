@@ -1,8 +1,10 @@
 package main;
 
 import com.lynden.gmapsfx.GoogleMapView;
-import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,16 +27,20 @@ public class Controller implements Initializable{
     private TextField searchBar;
     @FXML
     private ListView<String> listViewTweet;
-    private double lat,lon;
+
+    private ArrayList<Position> positions = new ArrayList<>();
 
     private ObservableList<String> tweetList = FXCollections.observableArrayList();
     private ArrayList<Status> searchResult = new ArrayList<>();
+
 
     @FXML
     void openMap(ActionEvent event){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("map.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
+            MapController mapController = fxmlLoader.getController();
+            mapController.transferPositions(positions);
             Stage stage = new Stage();
             stage.setTitle("Mappa");
             stage.setScene(new Scene(root1));
@@ -49,6 +55,7 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //To-Do
+        positions.add(new Position(40.27617, 9.40193));
     }
 
     public void searchTweets(){
@@ -64,7 +71,7 @@ public class Controller implements Initializable{
                 tweetList.add("Tweet #" + Integer.toString(count) + ": @" + tweet.getUser().getName() + " tweeted" +
                         "\"" + tweet.getText() + "\" \n");
                 if (tweet.getGeoLocation() != null){
-                    //Registrare marker e mandarlo alla mappa
+                    positions.add(new Position(tweet.getGeoLocation().getLatitude(), tweet.getGeoLocation().getLongitude()));
                 }
             }
             listViewTweet.setItems(tweetList);

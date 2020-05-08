@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
 import twitter4j.Status;
 
@@ -25,16 +26,13 @@ public class MapController implements Initializable, MapComponentInitializedList
     @FXML
     private AnchorPane anchorPane;
 
-
-    private GoogleMap map;
-    private double lat, lon;
-
     private ObservableList<String> tweetList = FXCollections.observableArrayList();
     private ArrayList<Status> searchResult = new ArrayList<>();
 
+    private ArrayList<Position> positions = new ArrayList<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //mapView = new GoogleMapView(Locale.getDefault().getLanguage(), mapApiKey);
         mapView.addMapInializedListener(this);
         AnchorPane.setTopAnchor(mapView, 10.0);
         anchorPane.getChildren().add(mapView);
@@ -54,11 +52,19 @@ public class MapController implements Initializable, MapComponentInitializedList
                 .zoom(6)
                 .mapType(MapTypeIdEnum.ROADMAP);
 
-        map = mapView.createMap(mapOptions);
+        GoogleMap map = mapView.createMap(mapOptions);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLong);
         Marker marker = new Marker(markerOptions);
         map.addMarker(marker);
-        map.addMarker(new Marker(new MarkerOptions().position(new LatLong(40.27617,9.40193))));
+        positions.add(new Position(40.27617, 9.40193));
+
+        for (Position p: positions){
+            map.addMarker(new Marker(new MarkerOptions().position(new LatLong(p.getLatitude(),p.getLongitude()))));
+        }
+    }
+
+    public void transferPositions(ArrayList<Position> positions){
+        this.positions = positions;
     }
 }

@@ -1,0 +1,9 @@
+
+
+java:S1319B"rThe type of the "markers" object should be an interface such as "List" rather than the implementation "ArrayList".(•º²-8Á™¥›Ÿ.
+O
+java:S1068"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ØÓÇó.
+
+java:S1186B"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•º²-8º®ŒŸ.
+L
+java:S1068"0Remove this unused "searchResult" private field.(åâ²c8ØÓÇó.

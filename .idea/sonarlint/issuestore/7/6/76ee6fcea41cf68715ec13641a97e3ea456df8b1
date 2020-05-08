@@ -1,10 +1,11 @@
 
-I
-java:S1068"'Remove this unused "lon" private field.(Ñ”ıüÿÿÿÿ8™ÕéÏ.
-C
-java:S1659"!Declare "lon" on a separate line.(Ñ”ıüÿÿÿÿ8úÃÈË.
-I
-java:S1068"'Remove this unused "lat" private field.(Ñ”ıüÿÿÿÿ8™ÕéÏ.
+l
+java:S1128"ORemove this unused import 'com.lynden.gmapsfx.MapComponentInitializedListener'.(šï¦‘8‡ÆÙó.
+Z	java:S106N"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8ä¥íœŸ.
 w
-java:S1450!"[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
-Z	java:S106X"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8óÜË.
+java:S1450""[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
+_
+java:S1128"=Remove this unused import 'com.lynden.gmapsfx.GoogleMapView'.(£ Úûûÿÿÿÿ8Ù£Ùó.
+E
+java:S11481"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ä¥íœŸ.
+Z	java:S1062"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
