@@ -17,7 +17,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import twitter4j.Status;
+import twitter4j.TwitterException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -79,4 +81,16 @@ public class Controller implements Initializable{
         else
             System.out.println("Barra di ricerca vuota!");
     }
+
+    public void searchStreamTweets(){
+        TweetHandler tweetHandler = new TweetHandler();
+        try {
+            tweetHandler.streamSearch();
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

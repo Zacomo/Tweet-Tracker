@@ -6,6 +6,9 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Filter;
 
 public class TweetHandler {
 
@@ -25,8 +28,84 @@ public class TweetHandler {
                 .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
     }
 
-    public void stream(){
+    public void streamSearch() throws TwitterException, IOException{
+        StatusListener listener = new StatusListener() {
+            int count = 0;
+            //devo inserire il filtro per le parole qui perché la filter query combina i filtri con un "OR", cioé
+            //ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
+            String[] keywords = {"virus", "covid-19", "covid", "corona", "Covid_19"};
+            @Override
+            public void onStatus(Status status) {
 
+                //Il filtro per le parole è più pesante, quindi controllo prima se è presente la posizione
+                // e se la lingua è quella italiana
+                if (status.getLang().contains("it")){
+                    String statusText = status.getText();
+
+                    //Se la posizione è presente, voglio controllare se è presente anche almeno una parola chiave
+                    //Forse il controllo può essere fatto in modo più efficiente
+                    if (statusText.contains(keywords[0]) || statusText.contains(keywords[1])
+                            || statusText.contains(keywords[2]) || statusText.contains(keywords[3]) || statusText.contains(keywords[4]) ){
+
+                        count++;
+                        String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: "
+                                + status.getText() + "| From: " + "\n";
+                        System.out.println(line);
+                        fileAppend(line);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+
+            }
+
+            @Override
+            public void onTrackLimitationNotice(int i) {
+
+            }
+
+            @Override
+            public void onScrubGeo(long l, long l1) {
+
+            }
+
+            @Override
+            public void onStallWarning(StallWarning stallWarning) {
+
+            }
+
+            @Override
+            public void onException(Exception e) {
+                e.printStackTrace();
+            }
+        };
+        TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+        twitterStream.addListener(listener);
+        //twitterStream.sample();
+
+        FilterQuery filterQuery = new FilterQuery();
+
+        //questo filtro dovrebbe impostare la lingua italiana per i tweet cercati
+        //filterQuery.language(new String[]{"it"});
+
+        //coordinate di Roma
+        double latitude = 41.89332;
+        double longitude = 12.482932;
+
+        //creerò due nuove coppie di coordinate che indicano due angoli opposti del quadrato che delimita l'area
+        //in cui ricerco i tweet. Per farlo mi baserò sulle coordinate di Roma.
+        double lat1 = latitude - 6;
+        double long1 = longitude - 6;
+        double lat2 = latitude + 5;
+        double long2 = longitude + 6;
+        double[][] boundaryBox = {{long1, lat1}, {long2, lat2}};
+
+        filterQuery.locations(boundaryBox);
+
+        twitterStream.filter(filterQuery);
     }
 
     public ArrayList<Status> search(String searchTerm){
@@ -70,6 +149,17 @@ public class TweetHandler {
             e.printStackTrace();
         }
 
+    }
+
+    private void fileAppend(String line){
+        try{
+            FileWriter fw = new FileWriter("streamTweets.txt", true);
+            fw.write(line);
+            fw.close();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 }

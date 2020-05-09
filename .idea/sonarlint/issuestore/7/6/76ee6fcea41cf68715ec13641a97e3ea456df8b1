@@ -1,11 +1,17 @@
 
-l
-java:S1128"ORemove this unused import 'com.lynden.gmapsfx.MapComponentInitializedListener'.(šï¦‘8‡ÆÙó.
-Z	java:S106N"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8ä¥íœŸ.
-w
-java:S1450""[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
+E
+java:S11482"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ä¥íœŸ.
 _
 java:S1128"=Remove this unused import 'com.lynden.gmapsfx.GoogleMapView'.(£ Úûûÿÿÿÿ8Ù£Ùó.
-E
-java:S11481"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ä¥íœŸ.
-Z	java:S1062"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
+k
+java:S1128"IRemove this unused import 'com.lynden.gmapsfx.javascript.object.LatLong'.(Ãéùûÿÿÿÿ8ııÜŸ.
+Z	java:S106P"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8ä¥íœŸ.
+w
+java:S1450""[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
+j
+java:S1128"HRemove this unused import 'com.lynden.gmapsfx.javascript.object.Marker'.(ƒá˜´şÿÿÿÿ8ııÜŸ.
+l
+java:S1128"ORemove this unused import 'com.lynden.gmapsfx.MapComponentInitializedListener'.(šï¦‘8ı€ÌŸ.
+q
+java:S1128"ORemove this unused import 'com.lynden.gmapsfx.javascript.object.MarkerOptions'.(‹çÿäüÿÿÿÿ8ııÜŸ.
+Z	java:S1063"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
