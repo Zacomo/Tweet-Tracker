@@ -12,12 +12,17 @@ import java.util.logging.Filter;
 
 public class TweetHandler {
 
+    //TODO: spostare su un altro file
     private static final String CONSUMER_KEY = "slfff2BIgQe37ztXD2hJUvukG";
     private static final String CONSUMER_SECRET = "PmqqhkRtgDdlUukgmxeeYBLyEXcrSywlyIIre1MqHKkUmdfQXT";
     private static final String ACCESS_TOKEN = "1054492053713928193-1exVBkyuBDeTGGgPMGT9ZtL1IrLJVE";
     private static final String ACCESS_TOKEN_SECRET = "Hc9XaQGtKPVbcVW4mdlO97sQAGZzlVNf9iATXmR9dcrpM";
 
     private final ConfigurationBuilder cb;
+
+    private TwitterStream twitterStream;
+
+    private ArrayList<Status> streamTweets = new ArrayList<>();
 
     public TweetHandler(){
         cb = new ConfigurationBuilder();
@@ -26,30 +31,37 @@ public class TweetHandler {
                 .setOAuthConsumerSecret(CONSUMER_SECRET)
                 .setOAuthAccessToken(ACCESS_TOKEN)
                 .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+
+        //inizializzazione twitter stream
+        twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
     }
 
-    public void streamSearch() throws TwitterException, IOException{
+    public void startStreamSearch() throws TwitterException, IOException{
+
         StatusListener listener = new StatusListener() {
             int count = 0;
             //devo inserire il filtro per le parole qui perché la filter query combina i filtri con un "OR", cioé
             //ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-            String[] keywords = {"virus", "covid-19", "covid", "corona", "Covid_19"};
+            String[] keywords = {"tesla", "covidiots", "silvia romano", "mothersday", "mamma"};
             @Override
             public void onStatus(Status status) {
 
                 //Il filtro per le parole è più pesante, quindi controllo prima se è presente la posizione
                 // e se la lingua è quella italiana
-                if (status.getLang().contains("it")){
-                    String statusText = status.getText();
+                if (status.getLang().contains("it") && status.getGeoLocation()!=null){
+                    String statusText = status.getText().toLowerCase();
 
-                    //Se la posizione è presente, voglio controllare se è presente anche almeno una parola chiave
-                    //Forse il controllo può essere fatto in modo più efficiente
+                    //Se la posizione è presente e la lingua è quella italiana,
+                    //voglio controllare se è presente anche almeno una parola chiave
+                    //Il controllo può essere fatto in modo più efficiente con un algoritmo O(n) con n pari alla
+                    //dimensione dell'array delle keyword
                     if (statusText.contains(keywords[0]) || statusText.contains(keywords[1])
                             || statusText.contains(keywords[2]) || statusText.contains(keywords[3]) || statusText.contains(keywords[4]) ){
 
                         count++;
                         String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: "
-                                + status.getText() + "| From: " + "\n";
+                                + status.getText() + "| From: " + status.getGeoLocation().toString() + "\n";
+                        streamTweets.add(status);
                         System.out.println(line);
                         fileAppend(line);
                     }
@@ -82,14 +94,9 @@ public class TweetHandler {
                 e.printStackTrace();
             }
         };
-        TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
         twitterStream.addListener(listener);
-        //twitterStream.sample();
 
         FilterQuery filterQuery = new FilterQuery();
-
-        //questo filtro dovrebbe impostare la lingua italiana per i tweet cercati
-        //filterQuery.language(new String[]{"it"});
 
         //coordinate di Roma
         double latitude = 41.89332;
@@ -106,6 +113,12 @@ public class TweetHandler {
         filterQuery.locations(boundaryBox);
 
         twitterStream.filter(filterQuery);
+    }
+
+    public ArrayList<Status> stopStreamSearch(){
+        twitterStream.cleanUp();
+        twitterStream.shutdown();
+        return streamTweets;
     }
 
     public ArrayList<Status> search(String searchTerm){

@@ -1,11 +1,37 @@
 
-
-java:S1319 "pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¦Ó‘8æëŞÍ.
-E
-java:S1148F"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ§›üœ.
-e
-java:S2095A"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8ñ§›üœ.
-E
-java:S11487"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8é¼Šüœ.
+£
+java:S1186L"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‡¤û£úÿÿÿÿ8èåĞÇŸ.
+k
+java:S2095œ"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(‚ÊÄÿÿÿÿÿ8èåĞÇŸ.
+Z	java:S1065"9Replace this use of System.out or System.err by a logger.(ñ—¸½úÿÿÿÿ8èåĞÇŸ.
+]	java:S125W"<This block of commented-out lines of code should be removed.(ûÌó—ÿÿÿÿÿ8èåĞÇŸ.
+£
+java:S1186G"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(î¥¥øÿÿÿÿ8èåĞÇŸ.
+M
+java:S1128
+"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8„¸¹ÇŸ.
+F
+java:S1148†"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8èåĞÇŸ.
 
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÅØ·«8Ùğ‘.
+java:S1186B"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Çí–ë8èåĞÇŸ.
+X	java:S125\"<This block of commented-out lines of code should be removed.(¡Ã·»8õèşÇŸ.
+
+java:S1319o"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¦Ó‘8èåĞÇŸ.
+F
+java:S1148•"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8èåĞÇŸ.
+
+java:S1130"sRemove the declaration of thrown exception 'twitter4j.TwitterException', as it cannot be thrown from method's body.(õ ó8¾—ÄŸ.
+
+java:S1186="€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—±ˆõ8èåĞÇŸ.
+R
+java:S1128"5Remove this unused import 'java.util.logging.Filter'.(ÌòÀÍ8åŒÓÅŸ.
+‰
+java:S1130"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(õ ó8¾—ÄŸ.
+E
+java:S1148R"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8èåĞÇŸ.
+O
+java:S1128	"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ8„¸¹ÇŸ.
+f
+java:S2095"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8èåĞÇŸ.
+F
+java:S1148¡"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8èåĞÇŸ.

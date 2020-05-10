@@ -1,10 +1,5 @@
 package main;
 
-import com.lynden.gmapsfx.GoogleMapView;
-import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -29,6 +25,14 @@ public class Controller implements Initializable{
     private TextField searchBar;
     @FXML
     private ListView<String> listViewTweet;
+    @FXML
+    private Button streamSearchButton;
+    @FXML
+    private Button streamStopButton;
+    @FXML
+    private Button openMapButton;
+
+    TweetHandler tweetHandler = new TweetHandler();
 
     private ArrayList<Position> positions = new ArrayList<>();
 
@@ -61,7 +65,7 @@ public class Controller implements Initializable{
     }
 
     public void searchTweets(){
-        TweetHandler tweetHandler = new TweetHandler();
+        openMapButton.setDisable(true);
         if (!searchBar.getText().isEmpty()) {
             searchResult = tweetHandler.search(searchBar.getText());
             int count = 0;
@@ -80,17 +84,31 @@ public class Controller implements Initializable{
         }
         else
             System.out.println("Barra di ricerca vuota!");
+
+        openMapButton.setDisable(false);
     }
 
     public void searchStreamTweets(){
-        TweetHandler tweetHandler = new TweetHandler();
         try {
-            tweetHandler.streamSearch();
+            streamSearchButton.setDisable(true);
+            openMapButton.setDisable(true);
+            streamStopButton.setDisable(false);
+
+            tweetHandler.startStreamSearch();
         } catch (TwitterException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopSearchStream(){
+        ArrayList<Status> tweets = tweetHandler.stopStreamSearch();
+        streamStopButton.setDisable(true);
+        streamSearchButton.setDisable(false);
+        openMapButton.setDisable(false);
+        for (Status status: tweets)
+            positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
     }
 
 }

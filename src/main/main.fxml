@@ -5,10 +5,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
-      <Button layoutX="757.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
+      <Button fx:id="openMapButton" layoutX="833.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
       <TextField id="searchBar" fx:id="searchBar" layoutX="96.0" layoutY="32.0" prefHeight="26.0" prefWidth="399.0" promptText="Parole chiave" />
       <Button id="searchButton" fx:id="searchButton" layoutX="495.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchTweets" text="Vai" />
       <ListView id="listViewTweet" fx:id="listViewTweet" layoutX="30.0" layoutY="70.0" prefHeight="516.0" prefWidth="997.0" />
-      <Button layoutX="575.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="StreamSearch" />
+      <Button fx:id="streamSearchButton" layoutX="575.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="StreamSearch" />
+      <Button fx:id="streamStopButton" disable="true" layoutX="703.0" layoutY="32.0" mnemonicParsing="false" onAction="#stopSearchStream" text="StreamStop" />
    </children>
 </AnchorPane>
