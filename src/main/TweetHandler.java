@@ -1,5 +1,6 @@
 package main;
 
+import com.google.gson.Gson;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -42,28 +43,31 @@ public class TweetHandler {
             int count = 0;
             //devo inserire il filtro per le parole qui perché la filter query combina i filtri con un "OR", cioé
             //ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-            String[] keywords = {"tesla", "covidiots", "silvia romano", "mothersday", "mamma"};
+            String[] keywords = {"internationalnursesday", "ind2020", "nursesday", "morning", "lockdown", "ferrari"};
             @Override
             public void onStatus(Status status) {
 
                 //Il filtro per le parole è più pesante, quindi controllo prima se è presente la posizione
                 // e se la lingua è quella italiana
-                if (status.getLang().contains("it") && status.getGeoLocation()!=null){
-                    String statusText = status.getText().toLowerCase();
+                if ((status.getLang().contains("it") || status.getLang().contains("en")) && status.getGeoLocation()!=null){
+                    String statusText = status.getText().toLowerCase().replaceAll(" ", "");
+                    System.out.println(statusText + "\n");
 
                     //Se la posizione è presente e la lingua è quella italiana,
                     //voglio controllare se è presente anche almeno una parola chiave
                     //Il controllo può essere fatto in modo più efficiente con un algoritmo O(n) con n pari alla
                     //dimensione dell'array delle keyword
                     if (statusText.contains(keywords[0]) || statusText.contains(keywords[1])
-                            || statusText.contains(keywords[2]) || statusText.contains(keywords[3]) || statusText.contains(keywords[4]) ){
+                            || statusText.contains(keywords[2]) || statusText.contains(keywords[3])
+                            || statusText.contains(keywords[4]) || statusText.contains(keywords[5]) ){
 
                         count++;
                         String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: "
                                 + status.getText() + "| From: " + status.getGeoLocation().toString() + "\n";
+
                         streamTweets.add(status);
                         System.out.println(line);
-                        fileAppend(line);
+                        fileAppend(line,"streamTweets.txt");
                     }
 
                 }
@@ -108,9 +112,13 @@ public class TweetHandler {
         double long1 = longitude - 6;
         double lat2 = latitude + 5;
         double long2 = longitude + 6;
-        double[][] boundaryBox = {{long1, lat1}, {long2, lat2}};
+        double[][] italyBB = {{long1, lat1}, {long2, lat2}};
 
-        filterQuery.locations(boundaryBox);
+        //UK boundary box
+        double[][] ukBB = {{-10.85449,49.82380},{2.02148,59.4785}};
+
+        filterQuery.locations(ukBB);
+        //filterQuery.locations(italyBB);
 
         twitterStream.filter(filterQuery);
     }
@@ -118,6 +126,7 @@ public class TweetHandler {
     public ArrayList<Status> stopStreamSearch(){
         twitterStream.cleanUp();
         twitterStream.shutdown();
+        fileAppend(new Gson().toJson(twitterStream),"jsonStreamTweets.json");
         return streamTweets;
     }
 
@@ -164,9 +173,9 @@ public class TweetHandler {
 
     }
 
-    private void fileAppend(String line){
+    private void fileAppend(String line, String fileName){
         try{
-            FileWriter fw = new FileWriter("streamTweets.txt", true);
+            FileWriter fw = new FileWriter(fileName, true);
             fw.write(line);
             fw.close();
         }
