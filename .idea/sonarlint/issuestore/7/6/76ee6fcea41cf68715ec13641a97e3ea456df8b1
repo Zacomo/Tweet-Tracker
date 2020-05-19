@@ -1,13 +1,29 @@
 
+]
+java:S1128";Remove this unused import 'twitter4j.TwitterObjectFactory'.(ù¡Ñƒıÿÿÿÿ8Ÿ×‘‘¡.
+E
+java:S1148="#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ÎõÓß¢.
+Z	java:S106Z"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8¾ûà¢.
+R
+java:S1481‰"/Remove this unused "jsonObject" local variable.(Ğš±Ôøÿÿÿÿ8¾ûà¢.
+E
+java:S1148i"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¾ûà¢.
 w
-java:S1450("[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
-Z	java:S1069"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
-Z	java:S106V"9Replace this use of System.out or System.err by a logger.(Îû¥–ıÿÿÿÿ8ä¥íœŸ.
-a
-java:S2147d"DCombine this catch with the one at line 98, which has the same body.(ï­£Ä8Ö ÄŸ.
+java:S1450-"[Remove the "searchResult" field and declare it as a local variable in the relevant methods.(åâ²c8ÚöàÏ.
+F
+java:S1148‡"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¾ûà¢.
+U
+java:S1874‚"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8¾ûà¢.
 E
-java:S1148c"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
-E
-java:S1148e"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
-E
-java:S11488"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ä¥íœŸ.
+java:S1148g"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¾ûà¢.
+e
+java:S1854x"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ıÿÿÿÿ8‹Á’á¢.
+K
+java:S1874…"-Remove this use of "parse"; it is deprecated.(î¦¹¹8¾ûà¢.
+Z	java:S106>"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
+b
+java:S2147h"ECombine this catch with the one at line 102, which has the same body.(ï­£Ä8¾ûà¢.
+S
+java:S4838y"6Change "Object" to the type handled by the Collection.(í˜ú8‹Á’á¢.

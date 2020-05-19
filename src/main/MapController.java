@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.layout.AnchorPane;
 import twitter4j.Status;
 
@@ -53,11 +52,6 @@ public class MapController implements Initializable, MapComponentInitializedList
                 .mapType(MapTypeIdEnum.ROADMAP);
 
         GoogleMap map = mapView.createMap(mapOptions);
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLong);
-        Marker marker = new Marker(markerOptions);
-        map.addMarker(marker);
-        positions.add(new Position(40.27617, 9.40193));
 
         for (Position p: positions){
             map.addMarker(new Marker(new MarkerOptions().position(new LatLong(p.getLatitude(),p.getLongitude()))));

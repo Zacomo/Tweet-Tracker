@@ -1,5 +1,8 @@
 package main;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,8 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -61,7 +63,6 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //To-Do
-        positions.add(new Position(40.27617, 9.40193));
     }
 
     public void searchTweets(){
@@ -109,6 +110,29 @@ public class Controller implements Initializable{
         openMapButton.setDisable(false);
         for (Status status: tweets)
             positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
+    }
+
+    public void loadPositions(){
+        JsonArray jsonTweetList = getFromJsonFile("jsonStreamTweets.json");
+        JsonObject jsonGeoLocation = new JsonObject();
+        for (Object o: jsonTweetList) {
+            jsonGeoLocation = (JsonObject) ((JsonObject) o).get("geoLocation");
+            double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
+            double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
+            positions.add(new Position(latitude,longitude));
+        }
+    }
+
+    public JsonArray getFromJsonFile(String jsonFilePath){
+        JsonParser parser = new JsonParser();
+        JsonArray jsonTweetList = new JsonArray();
+        try {
+            jsonTweetList = (JsonArray) parser.parse(new FileReader(jsonFilePath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JsonObject jsonObject = null;
+        return jsonTweetList;
     }
 
 }
