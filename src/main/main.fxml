@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850" prefWidth="1800" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
-      <Button fx:id="openMapButton" layoutX="933.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
-      <TextField id="searchBar" fx:id="searchBar" layoutX="96.0" layoutY="32.0" prefHeight="26.0" prefWidth="399.0" promptText="Parole chiave" />
-      <Button id="searchButton" fx:id="searchButton" layoutX="495.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchTweets" text="Vai" />
-      <ListView id="listViewTweet" fx:id="listViewTweet" layoutX="30.0" layoutY="70.0" prefHeight="516.0" prefWidth="997.0" />
-      <Button fx:id="streamSearchButton" layoutX="551.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="StreamSearch" />
-      <Button fx:id="streamStopButton" disable="true" layoutX="678.0" layoutY="32.0" mnemonicParsing="false" onAction="#stopSearchStream" text="StreamStop" />
-      <Button layoutX="792.0" layoutY="32.0" mnemonicParsing="false" onAction="#loadPositions" text="Carica Posizioni" />
+      <Button fx:id="openMapButton" layoutX="1004.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
+      <TextField id="searchBar" fx:id="searchBar" layoutX="48.0" layoutY="32.0" prefHeight="26.0" prefWidth="318.0" promptText="Parole chiave" />
+      <Button id="searchButton" fx:id="searchButton" layoutX="375.0" layoutY="32.0" mnemonicParsing="false" text="Vai" />
+      <Button fx:id="streamSearchButton" layoutX="435.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="StreamSearch" />
+      <Button fx:id="streamStopButton" disable="true" layoutX="554.0" layoutY="32.0" mnemonicParsing="false" onAction="#stopSearchStream" text="StreamStop" />
+      <Button layoutX="661.0" layoutY="32.0" mnemonicParsing="false" onAction="#loadJson" text="Carica JSON" />
+      <BarChart fx:id="tweetBarChart" animated="false" layoutX="65.0" layoutY="85.0" prefHeight="739.0" prefWidth="1626.0" title="Tweet Covid-19 per regione">
+        <xAxis>
+          <CategoryAxis label="Regione" side="BOTTOM" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" label="Numero di tweet" side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <Button layoutX="783.0" layoutY="32.0" mnemonicParsing="false" onAction="#openChart" text="Grafico" />
    </children>
 </AnchorPane>

@@ -1,10 +1,7 @@
 
-R
-java:S1128
-"0Remove this unused import 'javafx.geometry.Pos'.(ÌÆ÷Ùøÿÿÿÿ8ÕÏ÷Ÿ.
-–
-java:S1319>"tThe type of the "positions" object should be an interface such as "List" rather than the implementation "ArrayList".(ô‚„“úÿÿÿÿ8Á™¥›Ÿ.
 L
-java:S1068"0Remove this unused "searchResult" private field.(åâ²c8ØÓÇó.
+java:S1068"0Remove this unused "searchResult" private field.(åâ²c8ØÓÇó.
 O
-java:S1068"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ØÓÇó.
+java:S1068"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ØÓÇó.
+–
+java:S1319="tThe type of the "positions" object should be an interface such as "List" rather than the implementation "ArrayList".(ô‚„“úÿÿÿÿ8Á™¥›Ÿ.

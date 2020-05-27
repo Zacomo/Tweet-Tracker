@@ -7,6 +7,8 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class TweetHandler {
 
     //TODO: spostare su un altro file
@@ -39,13 +41,15 @@ public class TweetHandler {
             int count = 0;
             //devo inserire il filtro per le parole qui perché la filter query combina i filtri con un "OR", cioé
             //ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-            String[] keywords = {"lockdown", "covid-19", "monday", "morning", "ripaya", "muslim", "blackburn", "thought"};
+            String[] keywords = {"lockdown", "covid", "virus", "corona", "confinamento", "quarantena", "contagi", "tampon",
+                    "distanziamento", "mascherin", "epidemi", "fase 2", "dpcm", "decreto", "ffp", "oms", "pandemi",
+                    "smartwork", "sars", "vaccin", "stoacasa", "emergenz", "sanit", "salute", "protezion", "positiv"};
             @Override
             public void onStatus(Status status) {
 
                 //Il filtro per le parole è più pesante, quindi controllo prima se è presente la posizione
-                // e se la lingua è quella italiana
-                if ((status.getLang().contains("it") || status.getLang().contains("en") || status.getLang().contains("es")) && status.getGeoLocation()!=null){
+                // e se la lingua è quella italiana status.getLang().contains("it")
+                if ((status.getLang().contains("it") || status.getLang().contains("en")) &&status.getGeoLocation()!=null){
                     String statusText = status.getText().toLowerCase().replaceAll(" ", "");
                     System.out.println(statusText + "\n");
 
@@ -53,10 +57,7 @@ public class TweetHandler {
                     //voglio controllare se è presente anche almeno una parola chiave
                     //Il controllo può essere fatto in modo più efficiente con un algoritmo O(n) con n pari alla
                     //dimensione dell'array delle keyword
-                    if (statusText.contains(keywords[0]) || statusText.contains(keywords[1])
-                            || statusText.contains(keywords[2]) || statusText.contains(keywords[3])
-                            || statusText.contains(keywords[4]) || statusText.contains(keywords[5])
-                            || statusText.contains(keywords[6]) || statusText.contains(keywords[7]))
+                    if (Arrays.stream(keywords).parallel().anyMatch(statusText::contains))
                     {
                         count++;
                         String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: "
