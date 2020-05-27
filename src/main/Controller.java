@@ -11,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -49,6 +46,8 @@ public class Controller implements Initializable{
 
     private ObservableList<String> tweetList = FXCollections.observableArrayList();
     private ArrayList<Status> searchResult = new ArrayList<>();
+
+    private JsonArray jsonTweetList;
 
 
     @FXML
@@ -98,7 +97,7 @@ public class Controller implements Initializable{
     }
 
     public void loadJson(){
-        JsonArray jsonTweetList = getFromJsonFile("jsonStreamTweets.json");
+        jsonTweetList = getFromJsonFile("jsonStreamTweets.json");
         JsonObject jsonGeoLocation = new JsonObject();
 
         Map<String, Integer> tweetNumberRegion = new HashMap<>();
@@ -162,5 +161,22 @@ public class Controller implements Initializable{
                 return (new BigDecimal(n2.toString())).compareTo(new BigDecimal(n1.toString()));
             }
         });
+    }
+
+    public void openChart(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("chart.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            ChartController chartController = fxmlLoader.getController();
+            chartController.transferJsonTweets(jsonTweetList);
+            Stage stage = new Stage();
+            stage.setTitle("Grafico");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Couldn't load chart window");
+        }
     }
 }
