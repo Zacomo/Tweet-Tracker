@@ -1,29 +1,38 @@
 
-E
-java:S1148E"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
-L
-java:S10685"0Remove this unused "searchResult" private field.(åâ²c8ÍÙ‹£.
-[	java:S106–"9Replace this use of System.out or System.err by a logger.(¢ˆüşÿÿÿÿ8ËñÒ£.
 O
-java:S10684"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ÍÙ‹£.
-Z	java:S106F"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
+java:S1068/"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ÍÙ‹£.
+d
+java:S1117‰"ARename "jsonTweetList" which hides the field declared at line 50.(åÑ•ùşÿÿÿÿ8íúöª¥.
 E
-java:S1148W"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
-E
-java:S1148Y"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
-\
-java:S1128":Remove this unused import 'javafx.scene.control.ListView'.(ôõÂÄøÿÿÿÿ8ó¥œ‹£.
-e
-java:S1854h"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ıÿÿÿÿ8°ËÑ£.
-S
-java:S4838l"6Change "Object" to the type handled by the Collection.(í˜ú8ô¥÷Š£.
-U
-java:S1874†"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8ËñÒ£.
-K
-java:S1874‰"-Remove this use of "parse"; it is deprecated.(î¦¹¹8ËñÒ£.
-a
-java:S2147X"DCombine this catch with the one at line 86, which has the same body.(ï­£Ä8ô¥÷Š£.
-R
-java:S1481"/Remove this unused "jsonObject" local variable.(Ğš±Ôøÿÿÿÿ8ËñÒ£.
+java:S1148T"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
 F
-java:S1148‹"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ËñÒ£.
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ËñÒ£.
+f
+java:S1192o"IDefine a constant instead of duplicating this literal "fullName" 5 times.(ƒíêÓ8¹ Ø©¥.
+L
+java:S10680"0Remove this unused "searchResult" private field.(åâ²c8ÍÙ‹£.
+F
+java:S1148²"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8µ˜Àª¥.
+K
+java:S1874‹"-Remove this use of "parse"; it is deprecated.(î¦¹¹8ËñÒ£.
+U
+java:S1874ˆ"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8ËñÒ£.
+S
+java:S4838i"6Change "Object" to the type handled by the Collection.(í˜ú8íúöª¥.
+a
+java:S2147U"DCombine this catch with the one at line 83, which has the same body.(ï­£Ä8ô¥÷Š£.
+[	java:S106˜"9Replace this use of System.out or System.err by a logger.(¢ˆüşÿÿÿÿ8ËñÒ£.
+\
+java:S1128":Remove this unused import 'javafx.scene.control.ListView'.(ôõÂÄøÿÿÿÿ8ó¥œ‹£.
+R
+java:S1481"/Remove this unused "jsonObject" local variable.(Ğš±Ôøÿÿÿÿ8ËñÒ£.
+E
+java:S1148V"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
+Z	java:S106C"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
+E
+java:S1148B"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
+K
+java:S1604›"(Make this anonymous inner class a lambda(Úáû¨úÿÿÿÿ8ÏÍ÷©¥.
+[	java:S106³"9Replace this use of System.out or System.err by a logger.(åšÚ·ùÿÿÿÿ8µ˜Àª¥.
+e
+java:S1854e"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ıÿÿÿÿ8°ËÑ£.

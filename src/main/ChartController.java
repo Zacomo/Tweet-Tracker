@@ -22,14 +22,7 @@ public class ChartController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-/*
-        lineChartYAxis.setAutoRanging(false);
-        lineChartYAxis.setLowerBound(0);
-        lineChartYAxis.setUpperBound(40);
-        lineChartYAxis.setTickUnit(1);
-        lineChartYAxis.setMinorTickVisible(false);
-*/
-        System.out.println("Initialize");
+     System.out.println("Initialize");
     }
 
     public void transferJsonTweets(JsonArray jsonTweetList){
