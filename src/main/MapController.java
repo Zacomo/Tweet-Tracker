@@ -1,61 +1,61 @@
 package main;
 
-import com.lynden.gmapsfx.GoogleMapView;
-import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.object.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
-import twitter4j.Status;
-
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class MapController implements Initializable, MapComponentInitializedListener {
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
+
+public class MapController implements Initializable{
 
     private static final String API_KEY = "AIzaSyC7colAtUZfXN5u1SL7WONsT_81HnMlfZc";
 
     @FXML
-    private GoogleMapView mapView = new GoogleMapView(Locale.getDefault().getLanguage(), API_KEY);
+    public WebView mapView;
 
-    @FXML
-    private AnchorPane anchorPane;
+    private WebEngine engine;
 
-    private ObservableList<String> tweetList = FXCollections.observableArrayList();
-    private ArrayList<Status> searchResult = new ArrayList<>();
-
-    private ArrayList<Position> positions = new ArrayList<>();
+    private ArrayList<Position> positions;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        mapView.addMapInializedListener(this);
-        AnchorPane.setTopAnchor(mapView, 10.0);
-        anchorPane.getChildren().add(mapView);
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        engine = mapView.getEngine();
+        //la pagina viene caricata in modo asincrono
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+            public void changed(ObservableValue ov, State oldState, State newState) {
+                if (newState == State.SUCCEEDED) {
+                    engine.executeScript("initialize()");
+                    engine.executeScript("document.addMarker(40.27617, 9.40193)");
+                    for (Position p: positions){
+                        engine.executeScript("document.addMarker("+p.getLatitude()+","+p.getLongitude()+")");
+                    }
+                    }
+            }
+        });
+        engine.load(getClass().getResource("map.html").toString());
+        engine.setJavaScriptEnabled(true);
+        engine.setOnAlert(event -> showAlert(event.getData()));
+        JSObject window = (JSObject) engine.executeScript("window");
+        window.setMember("app", this);
     }
 
-    @Override
-    public void mapInitialized() {
-        LatLong latLong = new LatLong(41.9102415, 12.3959136);
-        MapOptions mapOptions = new MapOptions();
-        mapOptions.center(latLong)
-                .overviewMapControl(false)
-                .panControl(false)
-                .rotateControl(false)
-                .scaleControl(false)
-                .streetViewControl(false)
-                .zoomControl(false)
-                .zoom(6)
-                .mapType(MapTypeIdEnum.ROADMAP);
-
-        GoogleMap map = mapView.createMap(mapOptions);
-
-        for (Position p: positions){
-            map.addMarker(new Marker(new MarkerOptions().position(new LatLong(p.getLatitude(),p.getLongitude()))));
-        }
+    private void showAlert(String message) {
+        // TODO Auto-generated method stub
+        Dialog<Void> alert = new Dialog<>();
+        alert.getDialogPane().setContentText(message);
+        alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        alert.showAndWait();
     }
 
     public void transferPositions(ArrayList<Position> positions){

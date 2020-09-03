@@ -1,5 +1,6 @@
 package main;
 
+import com.lynden.gmapsfx.javascript.object.LatLong;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

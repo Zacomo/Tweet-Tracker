@@ -37,3 +37,5 @@ C
 src/main/chart.fxml,8/4/8492d0ffed38ff59fd245358f9476b452e255b1a
 M
 src/main/ChartController.java,a/3/a3fe23712a428d3f4ceaab6a63928d26c035979e
+A
+src/main/map.html,9/a/9acd432f4282a1e36848cc85b146a881f2938af6

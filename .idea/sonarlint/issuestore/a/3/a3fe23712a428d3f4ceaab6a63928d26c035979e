@@ -2,21 +2,21 @@
 U	java:S106"9Replace this use of System.out or System.err by a logger.(ã„êÕ8ÂÎÔß¥.
 E
 java:S1604["(Make this anonymous inner class a lambda(¶……Ë8ÂÎÔß¥.
-f
-java:S1192&"IDefine a constant instead of duplicating this literal "fullName" 5 times.(ƒíêÓ8ÂÎÔß¥.
-{
-java:S2293C"YReplace the type specification in this constructor call with the diamond operator ("<>").(çç–„úÿÿÿÿ8ÂÎÔß¥.
-S
-java:S4838P"6Change "Object" to the type handled by the Collection.(í˜ú8ÂÎÔß¥.
-U	java:S106B"9Replace this use of System.out or System.err by a logger.(ë¿‚¼8ÌÜĞ±¥.
+U	java:S106;"9Replace this use of System.out or System.err by a logger.(„Ï…8ÂÎÔß¥.
 U
 java:S3252>"3Use static access with "java.util.Map" for "Entry".(ÏĞïûÿÿÿÿ8ÂÎÔß¥.
+S
+java:S4838P"6Change "Object" to the type handled by the Collection.(í˜ú8ÂÎÔß¥.
+f
+java:S1192&"IDefine a constant instead of duplicating this literal "fullName" 5 times.(ƒíêÓ8ÂÎÔß¥.
 L
 java:S1481W"*Remove this unused "entry" local variable.(È»¶áÿÿÿÿÿ8ÂÎÔß¥.
+{
+java:S2293C"YReplace the type specification in this constructor call with the diamond operator ("<>").(çç–„úÿÿÿÿ8ÂÎÔß¥.
 D
 java:S1481D"(Remove this unused "day" local variable.(‡øÒ68ÂÎÔß¥.
-N
-java:S1128"1Remove this unused import 'java.math.BigDecimal'.(êêŠ8¾ıË²¥.
-U	java:S106;"9Replace this use of System.out or System.err by a logger.(„Ï…8ÂÎÔß¥.
 S
 java:S4838""6Change "Object" to the type handled by the Collection.(í˜ú8ÂÎÔß¥.
+N
+java:S1128"1Remove this unused import 'java.math.BigDecimal'.(êêŠ8¾ıË²¥.
+U	java:S106B"9Replace this use of System.out or System.err by a logger.(ë¿‚¼8ÌÜĞ±¥.

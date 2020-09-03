@@ -1,7 +1,17 @@
 
-L
-java:S1068"0Remove this unused "searchResult" private field.(åâ²c8ØÓÇó.
-O
-java:S1068"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ØÓÇó.
-–
-java:S1319="tThe type of the "positions" object should be an interface such as "List" rather than the implementation "ArrayList".(ô‚„“úÿÿÿÿ8Á™¥›Ÿ.
+T
+java:S1135Z"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8äÕ¾öÃ.
+9
+java:S1643K"Use a StringBuilder instead.(À“ş³8äÕ¾öÃ.
+U	java:S106J"9Replace this use of System.out or System.err by a logger.(ı¡ŒŞ8äÕ¾öÃ.
+Z	java:S106M"9Replace this use of System.out or System.err by a logger.(½ô©ğúÿÿÿÿ8äÕ¾öÃ.
+W
+java:S1128	"5Remove this unused import 'javafx.concurrent.Worker'.(ò¤’ùúÿÿÿÿ8ÕÁöÃ.
+G
+java:S1481G"*Remove this unused "count" local variable.(æÕ¿¼8äÕ¾öÃ.
+H
+java:S1172"&Remove these unused method parameters.(£¯Öõşÿÿÿÿ8äÕ¾öÃ.
+
+java:S1186a"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(âŒÌz8äÕ¾öÃ.
+H
+java:S1068"+Remove this unused "API_KEY" private field.(”›š¦8äÕ¾öÃ.
