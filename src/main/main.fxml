@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850" prefWidth="1800" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
-   <children>
-      <Button fx:id="openMapButton" layoutX="1004.0" layoutY="32.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
-      <TextField id="searchBar" fx:id="searchBar" layoutX="48.0" layoutY="32.0" prefHeight="26.0" prefWidth="318.0" promptText="Parole chiave" />
-      <Button id="searchButton" fx:id="searchButton" layoutX="375.0" layoutY="32.0" mnemonicParsing="false" text="Vai" />
-      <Button fx:id="streamSearchButton" layoutX="435.0" layoutY="32.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="StreamSearch" />
-      <Button fx:id="streamStopButton" disable="true" layoutX="554.0" layoutY="32.0" mnemonicParsing="false" onAction="#stopSearchStream" text="StreamStop" />
-      <Button layoutX="661.0" layoutY="32.0" mnemonicParsing="false" onAction="#loadJson" text="Carica JSON" />
-      <BarChart fx:id="tweetBarChart" animated="false" layoutX="65.0" layoutY="85.0" prefHeight="739.0" prefWidth="1626.0" title="Tweet Covid-19 per regione">
-        <xAxis>
-          <CategoryAxis label="Regione" side="BOTTOM" fx:id="xAxis" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="yAxis" label="Numero di tweet" side="LEFT" />
-        </yAxis>
-      </BarChart>
-      <Button layoutX="783.0" layoutY="32.0" mnemonicParsing="false" onAction="#openChart" text="Grafico" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+    <children>
+        <SplitPane dividerPositions="0.1880794701986755" layoutX="10.0" layoutY="18.0" orientation="VERTICAL" prefHeight="757.0" prefWidth="1230.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="18.0">
+            <items>
+                <AnchorPane fx:id="topAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="1228.0">
+                    <children>
+                        <TextField fx:id="searchBar" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="313.0" promptText="Parole chiave" />
+                        <Button fx:id="popularSearchButton" layoutX="345.0" layoutY="14.0" mnemonicParsing="false" text="Popular Search" />
+                        <Button fx:id="streamSearchButton" layoutX="487.0" layoutY="14.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="Stream Search" />
+                        <Button fx:id="loadJsonButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadJson" text="Carica JSON" />
+                        <Button fx:id="tweetListButton" layoutX="14.0" layoutY="63.0" mnemonicParsing="false" onAction="#loadTweetList" text="Lista Tweet" />
+                        <Button fx:id="openMapButton" layoutX="132.0" layoutY="63.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
+                        <Button fx:id="openChartButton" layoutX="245.0" layoutY="63.0" mnemonicParsing="false" onAction="#openChart" text="Grafici" />
+                        <Button fx:id="streamStopButton" disable="true" layoutX="614.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopSearchStream" text="Stream Stop" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="bottomAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <SplitPane dividerPositions="0.5" layoutX="5.0" layoutY="4.0" prefHeight="600.0" prefWidth="1220.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="4.0">
+                            <items>
+                                <AnchorPane fx:id="leftAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <ListView fx:id="tweetListView" layoutX="14.0" layoutY="14.0" prefHeight="571.0" prefWidth="575.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="14.0" />
+                           </children></AnchorPane>
+                                <AnchorPane fx:id="rightAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <ListView fx:id="statsListView" layoutX="14.0" layoutY="14.0" prefHeight="571.0" prefWidth="585.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="14.0" />
+                           </children></AnchorPane>
+                            </items>
+                        </SplitPane>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
 </AnchorPane>

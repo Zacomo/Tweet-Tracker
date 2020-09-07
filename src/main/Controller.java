@@ -1,6 +1,7 @@
 package main;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.collections.FXCollections;
@@ -11,7 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
@@ -33,26 +32,37 @@ public class Controller implements Initializable{
     @FXML
     private Button openMapButton;
     @FXML
-    private BarChart<?,?> tweetBarChart;
+    private ListView<String> tweetListView;
     @FXML
-    private CategoryAxis xAxis;
-    @FXML
-    private NumberAxis yAxis;
-
+    private ListView<String> statsListView;
 
     TweetHandler tweetHandler = new TweetHandler();
 
     private ArrayList<Position> positions = new ArrayList<>();
 
-    private ObservableList<String> tweetList = FXCollections.observableArrayList();
-    private ArrayList<Status> searchResult = new ArrayList<>();
-
     private JsonArray jsonTweetList;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //To-Do
+    }
+
+    public void loadTweetList(){
+        if (jsonTweetList!=null){
+            int tweetCounter = 0;
+            for (JsonElement o: jsonTweetList){
+                tweetCounter++;
+
+                String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString();
+                tweetListView.getItems().add(text);
+            }
+        }
+    }
 
     @FXML
     void openMap(ActionEvent event){
         try{
+            initializeTweetPositions();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("map.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             MapController mapController = fxmlLoader.getController();
@@ -66,11 +76,6 @@ public class Controller implements Initializable{
             e.printStackTrace();
             System.out.println("Couldn't load map window");
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        //To-Do
     }
 
     public void searchStreamTweets(){
@@ -98,38 +103,6 @@ public class Controller implements Initializable{
 
     public void loadJson(){
         jsonTweetList = getFromJsonFile("jsonStreamTweets.json");
-        JsonObject jsonGeoLocation = new JsonObject();
-
-        Map<String, Integer> tweetNumberRegion = new HashMap<>();
-
-        for (Object o: jsonTweetList) {
-            JsonObject jsonPlace = (JsonObject) ((JsonObject)o).get("place");
-            //a quanto pare alcuni tweet, anche se geolocalizzati, possono avere il campo place = null
-            //Lacio,Trentino-Alto Adigio,Cerdeña, Véneto???
-            if (jsonPlace!=null && jsonPlace.get("country")!=null &&
-                    jsonPlace.get("country").toString().contains("Italia") &&
-                    !jsonPlace.get("fullName").toString().contains("Lacio") &&
-                    !jsonPlace.get("fullName").toString().contains("Trentino-Alto Adigio") &&
-                    !jsonPlace.get("fullName").toString().contains("Cerdeña") &&
-                    !jsonPlace.get("fullName").toString().contains("Véneto")){
-
-                jsonGeoLocation = (JsonObject) ((JsonObject) o).get("geoLocation");
-                double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
-                double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
-                positions.add(new Position(latitude,longitude));
-
-                String regionName = jsonPlace.get("fullName").toString();
-
-                //il campo fullName è fatto così: "città, regione"
-                regionName = regionName.replaceAll("^[^,]*, ","");
-                regionName = regionName.replaceAll("\"","");
-
-                //se la regione non è presente nell'hash map, allora la inserisco con count 0, altrimenti incremento il count
-                tweetNumberRegion.putIfAbsent(regionName,0);
-                tweetNumberRegion.put(regionName,tweetNumberRegion.get(regionName)+1);
-            }
-        }
-        populateBarChart(tweetNumberRegion);
     }
 
     public JsonArray getFromJsonFile(String jsonFilePath){
@@ -144,23 +117,22 @@ public class Controller implements Initializable{
         return jsonTweetList;
     }
 
-    private void populateBarChart(Map<String, Integer> values){
-        XYChart.Series set1 = new XYChart.Series<>();
+    //inizializza l'array positions che verrà passato alla mappa
+    public void initializeTweetPositions(){
+        if (jsonTweetList!=null){
+            JsonObject jsonGeoLocation = new JsonObject();
 
-        for (Map.Entry<String,Integer> entry: values.entrySet()){
-            set1.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
-            System.out.println(entry.getKey() + "| " + entry.getValue());
-        }
-        tweetBarChart.getData().addAll(set1);
-        Collections.sort(set1.getData(), new Comparator<XYChart.Data>(){
+            for (Object o: jsonTweetList) {
+                JsonObject jsonPlace = (JsonObject) ((JsonObject)o).get("place");
 
-            @Override
-            public int compare(XYChart.Data t1, XYChart.Data t2) {
-                Number n1 = (Number) t1.getYValue();
-                Number n2 = (Number) t2.getYValue();
-                return (new BigDecimal(n2.toString())).compareTo(new BigDecimal(n1.toString()));
+                //a quanto pare alcuni tweet, anche se geolocalizzati, possono avere il campo place == null
+                //if (jsonPlace!=null)
+                    jsonGeoLocation = (JsonObject) ((JsonObject) o).get("geoLocation");
+                    double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
+                    double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
+                    positions.add(new Position(latitude,longitude));
             }
-        });
+        }
     }
 
     public void openChart(){
