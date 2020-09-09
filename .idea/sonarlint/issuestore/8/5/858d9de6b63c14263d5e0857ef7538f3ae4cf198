@@ -1,14 +1,14 @@
 
-H
-java:S1172$"&Remove these unused method parameters.(£¯Öõşÿÿÿÿ8äÕ¾öÃ.
 T
 java:S11356"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ8½æ·™Å.
 –
 java:S1319="tThe type of the "positions" object should be an interface such as "List" rather than the implementation "ArrayList".(ô‚„“úÿÿÿÿ8Ø¦Ò™Å.
-k
-java:S1128"IRemove this unused import 'com.lynden.gmapsfx.javascript.object.LatLong'.(Ãéùûÿÿÿÿ8½æ·™Å.
 H
 java:S1068"+Remove this unused "API_KEY" private field.(”›š¦8äÕ¾öÃ.
+H
+java:S1172$"&Remove these unused method parameters.(£¯Öõşÿÿÿÿ8äÕ¾öÃ.
 W
 java:S1128
 "5Remove this unused import 'javafx.concurrent.Worker'.(ò¤’ùúÿÿÿÿ8ÕÁöÃ.
+k
+java:S1128"IRemove this unused import 'com.lynden.gmapsfx.javascript.object.LatLong'.(Ãéùûÿÿÿÿ8½æ·™Å.

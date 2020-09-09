@@ -7,14 +7,15 @@ import com.google.gson.JsonParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -34,7 +35,17 @@ public class Controller implements Initializable{
     @FXML
     private ListView<String> tweetListView;
     @FXML
-    private ListView<String> statsListView;
+    private TableView<AnalyzedTweet> tweetStatsTableView;
+    @FXML
+    private TableColumn<AnalyzedTweet,Integer> favoritedColumn;
+    @FXML
+    private TableColumn<AnalyzedTweet,Integer> retweetedColumn;
+    @FXML
+    private TableColumn<AnalyzedTweet,Integer> followersColumn;
+    @FXML
+    private TableColumn<AnalyzedTweet,Double> influenceColumn;
+    @FXML
+    private TableColumn<AnalyzedTweet,String> tweetNumberColumn;
 
     TweetHandler tweetHandler = new TweetHandler();
 
@@ -44,7 +55,11 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //To-Do
+        favoritedColumn.setCellValueFactory(new PropertyValueFactory<>("favorited"));
+        retweetedColumn.setCellValueFactory(new PropertyValueFactory<>("retweeted"));
+        followersColumn.setCellValueFactory(new PropertyValueFactory<>("followers"));
+        influenceColumn.setCellValueFactory(new PropertyValueFactory<>("influence"));
+        tweetNumberColumn.setCellValueFactory(new PropertyValueFactory<>("tweetNumber"));
     }
 
     public void loadTweetList(){
@@ -53,8 +68,28 @@ public class Controller implements Initializable{
             for (JsonElement o: jsonTweetList){
                 tweetCounter++;
 
-                String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString();
+                String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString()
+                        +" || id:"+o.getAsJsonObject().get("id");
                 tweetListView.getItems().add(text);
+
+                tweetListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        String tweet = tweetListView.getSelectionModel().getSelectedItem();
+                        //recupero la numerazione del tweet nella lista
+                        int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
+                                .replaceAll("#",""));
+
+                        //recupero l'id del tweet dal testo
+                        String id = tweet.replaceAll(".*[|| id:]","");
+                        Status tweetFound = tweetHandler.searchById(id);
+                        if (tweetFound!=null){
+                            AnalyzedTweet analyzedTweet = new AnalyzedTweet(tweetNumber,tweetFound.getFavoriteCount(),
+                                    tweetFound.getRetweetCount(),tweetFound.getUser().getFollowersCount());
+                            tweetStatsTableView.getItems().add(analyzedTweet);
+                        }
+                    }
+                });
             }
         }
     }

@@ -2,6 +2,7 @@ package main;
 
 import com.google.gson.Gson;
 import twitter4j.*;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.FileWriter;
@@ -21,6 +22,8 @@ public class TweetHandler {
 
     private TwitterStream twitterStream;
 
+    private Twitter twitter;
+
     private ArrayList<Status> streamTweets = new ArrayList<>();
 
     public TweetHandler(){
@@ -31,8 +34,11 @@ public class TweetHandler {
                 .setOAuthAccessToken(ACCESS_TOKEN)
                 .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
 
+        Configuration config = cb.build();
         //inizializzazione twitter stream
-        twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+        twitterStream = new TwitterStreamFactory(config).getInstance();
+        //inizializzazione twitter search
+        twitter = new TwitterFactory(config).getInstance();
     }
 
     public void startStreamSearch() throws TwitterException, IOException{
@@ -138,7 +144,6 @@ public class TweetHandler {
         ArrayList<String> tweetsFound = new ArrayList<>();
         ArrayList<Status> statusFound = new ArrayList<>();
 
-        Twitter twitter = new TwitterFactory(cb.build()).getInstance();
         Query query = new Query(searchTerm);
         query.setCount(100);
         //Utilizzo la capitale come centro per il Geocode, lat 41.8933203 long 12.4829321
@@ -163,6 +168,23 @@ public class TweetHandler {
         fileUpdate(tweetsFound);
 
         return statusFound;
+    }
+
+    public Status searchById(String id){
+        Status status = null;
+        try {
+            status = twitter.showStatus(Long.parseLong(id));
+            if (status == null) {
+                System.out.println("Tweet not found");
+            } else {
+                System.out.println("@" + status.getUser().getScreenName()
+                        + " - " + status.getText());
+            }
+        } catch (TwitterException e) {
+            System.err.print("Failed to search tweets: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return status;
     }
 
     private void fileUpdate(ArrayList<String> tweetsFound){

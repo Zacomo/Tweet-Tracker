@@ -1,38 +1,36 @@
 
-d
-java:S1117‰"ARename "jsonTweetList" which hides the field declared at line 50.(åÑ•ùşÿÿÿÿ8íúöª¥.
 F
-java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ËñÒ£.
-\
-java:S1128":Remove this unused import 'javafx.scene.control.ListView'.(ôõÂÄøÿÿÿÿ8ó¥œ‹£.
-L
-java:S10680"0Remove this unused "searchResult" private field.(åâ²c8ÍÙ‹£.
+java:S1148–"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8±œ´¼Æ.
+E
+java:S1148["#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
+Z
+java:S1854~"=Remove this useless assignment to local variable "jsonPlace".(ÿ””Á8ç¹¼Æ.
+^	java:S125"<This block of commented-out lines of code should be removed.(ıÒ×¿øÿÿÿÿ8ç¹¼Æ.
+E
+java:S1148L"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¤ÓÛ»Æ.
 e
-java:S1854e"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ıÿÿÿÿ8°ËÑ£.
-[	java:S106˜"9Replace this use of System.out or System.err by a logger.(¢ˆüşÿÿÿÿ8ËñÒ£.
-E
-java:S1148T"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
-O
-java:S1068/"-Remove this unused "tweetList" private field.(“öŸ˜ûÿÿÿÿ8ÍÙ‹£.
-F
-java:S1148²"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8µ˜Àª¥.
-K
-java:S1604›"(Make this anonymous inner class a lambda(Úáû¨úÿÿÿÿ8ÏÍ÷©¥.
-E
-java:S1148B"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ö ÄŸ.
-E
-java:S1148V"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ô¥÷Š£.
-Z	java:S106C"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8ä¥íœŸ.
-f
-java:S1192o"IDefine a constant instead of duplicating this literal "fullName" 5 times.(ƒíêÓ8¹ Ø©¥.
+java:S1854{"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ıÿÿÿÿ8ç¹¼Æ.
+Z
+java:S1128"=Remove this unused import 'javafx.collections.FXCollections'.(´¶²Æ8ÆŞ£½Æ.
 a
-java:S2147U"DCombine this catch with the one at line 83, which has the same body.(ï­£Ä8ô¥÷Š£.
-S
-java:S4838i"6Change "Object" to the type handled by the Collection.(í˜ú8íúöª¥.
+java:S2147Z"DCombine this catch with the one at line 88, which has the same body.(ï­£Ä8¤ÓÛ»Æ.
 K
-java:S1874‹"-Remove this use of "parse"; it is deprecated.(î¦¹¹8ËñÒ£.
-[	java:S106³"9Replace this use of System.out or System.err by a logger.(åšÚ·ùÿÿÿÿ8µ˜Àª¥.
-R
-java:S1481"/Remove this unused "jsonObject" local variable.(Ğš±Ôøÿÿÿÿ8ËñÒ£.
-U
-java:S1874ˆ"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8ËñÒ£.
+java:S1481~".Remove this unused "jsonPlace" local variable.(ÿ””Á8ç¹¼Æ.
+c
+java:S1117n"ARename "jsonTweetList" which hides the field declared at line 43.(åÑ•ùşÿÿÿÿ8±œ´¼Æ.
+J
+java:S1874p"-Remove this use of "parse"; it is deprecated.(î¦¹¹8±œ´¼Æ.
+Q
+java:S1481t"/Remove this unused "jsonObject" local variable.(Ğš±Ôøÿÿÿÿ8±œ´¼Æ.
+S
+java:S4838}"6Change "Object" to the type handled by the Collection.(í˜ú8±œ´¼Æ.
+`
+java:S1128">Remove this unused import 'javafx.collections.ObservableList'.(ÄÜ€éüÿÿÿÿ8ÆŞ£½Æ.
+Z	java:S106M"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8¤ÓÛ»Æ.
+E
+java:S1148Y"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¤ÓÛ»Æ.
+T
+java:S1874m"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8±œ´¼Æ.
+E
+java:S1148r"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8±œ´¼Æ.
+[	java:S106—"9Replace this use of System.out or System.err by a logger.(åšÚ·ùÿÿÿÿ8±œ´¼Æ.

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
     <children>
@@ -29,7 +30,28 @@
                            </children></AnchorPane>
                                 <AnchorPane fx:id="rightAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <ListView fx:id="statsListView" layoutX="14.0" layoutY="14.0" prefHeight="571.0" prefWidth="585.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="14.0" />
+                              <SplitPane dividerPositions="0.25" orientation="VERTICAL" prefHeight="598.0" prefWidth="605.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="603.0">
+                                       <children>
+                                          <TableView fx:id="tweetStatsTableView" layoutX="11.0" layoutY="10.0" prefHeight="126.0" prefWidth="582.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                            <columns>
+                                                <TableColumn fx:id="tweetNumberColumn" prefWidth="116.0" text="Numero Tweet" />
+                                              <TableColumn fx:id="favoritedColumn" prefWidth="104.0" text="Like" />
+                                              <TableColumn fx:id="retweetedColumn" minWidth="5.0" text="Retweet" />
+                                                <TableColumn fx:id="followersColumn" prefWidth="91.0" text="Followers" />
+                                                <TableColumn fx:id="influenceColumn" prefWidth="108.0" text="Influenza" />
+                                            </columns>
+                                          </TableView>
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="266.0" prefWidth="603.0">
+                                       <children>
+                                          <WebView layoutX="20.0" layoutY="14.0" prefHeight="416.0" prefWidth="568.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
                            </children></AnchorPane>
                             </items>
                         </SplitPane>
