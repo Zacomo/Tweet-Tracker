@@ -1,9 +1,6 @@
 package main;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,6 +23,8 @@ import java.util.*;
 public class Controller implements Initializable{
     @FXML
     private TextField searchBar;
+    @FXML
+    private Button popularSearchButton;
     @FXML
     private Button streamSearchButton;
     @FXML
@@ -60,6 +59,28 @@ public class Controller implements Initializable{
         followersColumn.setCellValueFactory(new PropertyValueFactory<>("followers"));
         influenceColumn.setCellValueFactory(new PropertyValueFactory<>("influence"));
         tweetNumberColumn.setCellValueFactory(new PropertyValueFactory<>("tweetNumber"));
+
+        //Gestione click elemento lista
+        tweetListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                String tweet = tweetListView.getSelectionModel().getSelectedItem();
+                //recupero la numerazione del tweet nella lista
+                //rimuovo newline e break
+                tweet = tweet.replace("\n", "").replace("\r", "");
+                int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
+                        .replaceAll("#",""));
+
+                //recupero l'id del tweet dal testo
+                String id = tweet.replaceAll(".*[|| id:]","");
+                Status tweetFound = tweetHandler.searchById(id);
+                if (tweetFound!=null){
+                    AnalyzedTweet analyzedTweet = new AnalyzedTweet(tweetNumber,tweetFound.getFavoriteCount(),
+                            tweetFound.getRetweetCount(),tweetFound.getUser().getFollowersCount());
+                    tweetStatsTableView.getItems().add(analyzedTweet);
+                }
+            }
+        });
     }
 
     public void loadTweetList(){
@@ -71,25 +92,20 @@ public class Controller implements Initializable{
                 String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString()
                         +" || id:"+o.getAsJsonObject().get("id");
                 tweetListView.getItems().add(text);
+            }
+        }
+    }
 
-                tweetListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        String tweet = tweetListView.getSelectionModel().getSelectedItem();
-                        //recupero la numerazione del tweet nella lista
-                        int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
-                                .replaceAll("#",""));
-
-                        //recupero l'id del tweet dal testo
-                        String id = tweet.replaceAll(".*[|| id:]","");
-                        Status tweetFound = tweetHandler.searchById(id);
-                        if (tweetFound!=null){
-                            AnalyzedTweet analyzedTweet = new AnalyzedTweet(tweetNumber,tweetFound.getFavoriteCount(),
-                                    tweetFound.getRetweetCount(),tweetFound.getUser().getFollowersCount());
-                            tweetStatsTableView.getItems().add(analyzedTweet);
-                        }
-                    }
-                });
+    public void popularSearch(){
+        String searchText = searchBar.getText();
+        if (searchText.length()>0){
+            ArrayList<Status> tweets = tweetHandler.search(searchText);
+            tweetListView.getItems().clear();
+            int tweetCounter = 0;
+            for (Status tweet: tweets){
+                tweetCounter++;
+                String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
+                tweetListView.getItems().add(text);
             }
         }
     }

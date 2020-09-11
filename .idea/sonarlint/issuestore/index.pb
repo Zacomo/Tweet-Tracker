@@ -39,3 +39,5 @@ M
 src/main/ChartController.java,a/3/a3fe23712a428d3f4ceaab6a63928d26c035979e
 A
 src/main/map.html,9/a/9acd432f4282a1e36848cc85b146a881f2938af6
+K
+src/main/AnalyzedTweet.java,f/e/fe5c1037c5b8f560ff5032d10147573d3253088c

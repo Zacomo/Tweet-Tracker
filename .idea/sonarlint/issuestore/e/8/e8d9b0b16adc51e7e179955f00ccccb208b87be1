@@ -1,44 +1,49 @@
 
-
-java:S1319‰"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¦Ó‘8‡½È£.
-e
-java:S2095¶"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(úÌ“F8‡½È£.
-j
-java:S53615"HReplace this call to "replaceAll()" by a call to the "replace()" method.(ÑŞÃşÿÿÿÿ8’Ç»©¥.
-£
-java:S1186]"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‡¤û£úÿÿÿÿ8‡½È£.
-f
-java:S2095ª"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8‡½È£.
-F
-java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
-Z	java:S106C"9Replace this use of System.out or System.err by a logger.(ñ—¸½úÿÿÿÿ8‡½È£.
-
-java:S1130&"sRemove the declaration of thrown exception 'twitter4j.TwitterException', as it cannot be thrown from method's body.(è‚‚8ä®†îŸ.
-X
-java:S1854t";Remove this useless assignment to local variable "italyBB".(†‡·8‡½È£.
-
-java:S1186N"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—±ˆõ8‡½È£.
-F
-java:S1148 "#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
-U
-java:S1854z"8Remove this useless assignment to local variable "esBB".(¬ÔÎÌ8‡½È£.
-]	java:S125}"<This block of commented-out lines of code should be removed.(´ÊÁ±şÿÿÿÿ8‡½È£.
-F
-java:S1481z")Remove this unused "esBB" local variable.(¬ÔÎÌ8‡½È£.
-£
-java:S1186X"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(î¥¥øÿÿÿÿ8‡½È£.
-“
-java:S1319ƒ"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Öüªíùÿÿÿÿ8‡½È£.
-F
-java:S1148»"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
-T
-java:S1135"2Complete the task associated to this TODO comment.(”şåôşÿÿÿÿ8âºèíŸ.
 ˆ
-java:S1130&"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(è‚‚8ä®†îŸ.
+java:S1130,"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(è‚‚8ä®†îŸ.
+V
+java:S1854€"8Remove this useless assignment to local variable "esBB".(¬ÔÎÌ8‡½È£.
+£
+java:S1186^"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(î¥¥øÿÿÿÿ8‡½È£.
+^	java:S125ƒ"<This block of commented-out lines of code should be removed.(´ÊÁ±şÿÿÿÿ8‡½È£.
 I
-java:S1481t",Remove this unused "italyBB" local variable.(†‡·8‡½È£.
+java:S1481z",Remove this unused "italyBB" local variable.(†‡·8‡½È£.
+
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¦Ó‘8‡½È£.
 E
-java:S1148c"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
-Z	java:S1066"9Replace this use of System.out or System.err by a logger.(ŞÍ¹“üÿÿÿÿ8’Ç»©¥.
+java:S1148i"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
+F
+java:S1148¥"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
 
-java:S1186S"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Çí–ë8‡½È£.
+java:S1186Y"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Çí–ë8‡½È£.
+Z	java:S106<"9Replace this use of System.out or System.err by a logger.(ŞÍ¹“üÿÿÿÿ8’Ç»©¥.
+f
+java:S2095À"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(¸ûèË8‡½È£.
+e
+java:S2095Ì"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(úÌ“F8‡½È£.
+T
+java:S1135"2Complete the task associated to this TODO comment.(”şåôşÿÿÿÿ8âºèíŸ.
+
+java:S1186T"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—±ˆõ8‡½È£.
+F
+java:S1148¹"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñõ×Ç.
+j
+java:S5361;"HReplace this call to "replaceAll()" by a call to the "replace()" method.(ÑŞÃşÿÿÿÿ8’Ç»©¥.
+F
+java:S1148Å"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
+X
+java:S1854z";Remove this useless assignment to local variable "italyBB".(†‡·8‡½È£.
+F
+java:S1148Ñ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8‡½È£.
+
+java:S1130,"sRemove the declaration of thrown exception 'twitter4j.TwitterException', as it cannot be thrown from method's body.(è‚‚8ä®†îŸ.
+Z	java:S106I"9Replace this use of System.out or System.err by a logger.(ñ—¸½úÿÿÿÿ8‡½È£.
+G
+java:S1481€")Remove this unused "esBB" local variable.(¬ÔÎÌ8‡½È£.
+“
+java:S1319‰"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(Öüªíùÿÿÿÿ8‡½È£.
+[	java:S106²"9Replace this use of System.out or System.err by a logger.(Àü‘¾ùÿÿÿÿ8…¢ÖÇ.
+V	java:S106´"9Replace this use of System.out or System.err by a logger.(šÆ­©8šØÍÇ.
+[	java:S106¸"9Replace this use of System.out or System.err by a logger.(Ú”À†ûÿÿÿÿ8šØÍÇ.
+£
+java:S1186c"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‡¤û£úÿÿÿÿ8‡½È£.

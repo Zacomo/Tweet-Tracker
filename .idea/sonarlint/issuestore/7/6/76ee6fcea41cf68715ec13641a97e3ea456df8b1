@@ -1,36 +1,38 @@
 
+R
+java:S1481—"/Remove this unused "jsonObject" local variable.(Ðš±Ôøÿÿÿÿ8žûû‘Ç.
+^	java:S125¤"<This block of commented-out lines of code should be removed.(ýÒ×¿øÿÿÿÿ8žûû‘Ç.
+K
+java:S1874“"-Remove this use of "parse"; it is deprecated.(î¦¹¹8žûû‘Ç.
 F
-java:S1148–"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8±œ´¼Æ.
+java:S1148•"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ì‡Û‘Ç.
+L
+java:S1481¡".Remove this unused "jsonPlace" local variable.(ÿ””Á8žûû‘Ç.
+d
+java:S1117‘"ARename "jsonTweetList" which hides the field declared at line 54.(åÑ•ùþÿÿÿÿ8žûû‘Ç.
+Z	java:S106p"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8žûû‘Ç.
+[
+java:S1854¡"=Remove this useless assignment to local variable "jsonPlace".(ÿ””Á8žûû‘Ç.
 E
-java:S1148["#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ô¥÷Š£.
-Z
-java:S1854~"=Remove this useless assignment to local variable "jsonPlace".(ÿ””Á8ç¹¼Æ.
-^	java:S125"<This block of commented-out lines of code should be removed.(ýÒ×¿øÿÿÿÿ8ç¹¼Æ.
-E
-java:S1148L"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8¤ÓÛ»Æ.
-e
-java:S1854{"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ýÿÿÿÿ8ç¹¼Æ.
+java:S1148o"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ì‡Û‘Ç.
 Z
 java:S1128"=Remove this unused import 'javafx.collections.FXCollections'.(´¶²Æ8ÆÞ£½Æ.
-a
-java:S2147Z"DCombine this catch with the one at line 88, which has the same body.(ï­£Ä8¤ÓÛ»Æ.
-K
-java:S1481~".Remove this unused "jsonPlace" local variable.(ÿ””Á8ç¹¼Æ.
-c
-java:S1117n"ARename "jsonTweetList" which hides the field declared at line 43.(åÑ•ùþÿÿÿÿ8±œ´¼Æ.
-J
-java:S1874p"-Remove this use of "parse"; it is deprecated.(î¦¹¹8±œ´¼Æ.
-Q
-java:S1481t"/Remove this unused "jsonObject" local variable.(Ðš±Ôøÿÿÿÿ8±œ´¼Æ.
-S
-java:S4838}"6Change "Object" to the type handled by the Collection.(í˜ú8±œ´¼Æ.
+e
+java:S5361Q"HReplace this call to "replaceAll()" by a call to the "replace()" method.(â€ø¨8ä©å’Ç.
+b
+java:S2147}"ECombine this catch with the one at line 123, which has the same body.(ï­£Ä8žûû‘Ç.
+E
+java:S1148|"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ì‡Û‘Ç.
+F
+java:S1148¹"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ì‡Û‘Ç.
+T
+java:S4838 "6Change "Object" to the type handled by the Collection.(í˜ú8žûû‘Ç.
+[	java:S106º"9Replace this use of System.out or System.err by a logger.(åšÚ·ùÿÿÿÿ8žûû‘Ç.
+U
+java:S1874"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8žûû‘Ç.
+E
+java:S1148~"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ì‡Û‘Ç.
+f
+java:S1854ž"CRemove this useless assignment to local variable "jsonGeoLocation".(ªÎø«ýÿÿÿÿ8žûû‘Ç.
 `
 java:S1128">Remove this unused import 'javafx.collections.ObservableList'.(ÄÜ€éüÿÿÿÿ8ÆÞ£½Æ.
-Z	java:S106M"9Replace this use of System.out or System.err by a logger.(êûÛ¼ûÿÿÿÿ8¤ÓÛ»Æ.
-E
-java:S1148Y"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8¤ÓÛ»Æ.
-T
-java:S1874m"2Remove this use of "JsonParser"; it is deprecated.(ªµ’ÿùÿÿÿÿ8±œ´¼Æ.
-E
-java:S1148r"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8±œ´¼Æ.
-[	java:S106—"9Replace this use of System.out or System.err by a logger.(åšÚ·ùÿÿÿÿ8±œ´¼Æ.
