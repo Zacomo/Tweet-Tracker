@@ -32,7 +32,8 @@ public class TweetHandler {
                 .setOAuthConsumerKey(CONSUMER_KEY)
                 .setOAuthConsumerSecret(CONSUMER_SECRET)
                 .setOAuthAccessToken(ACCESS_TOKEN)
-                .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+                .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET)
+                .setTweetModeExtended(true);
 
         Configuration config = cb.build();
         //inizializzazione twitter stream
