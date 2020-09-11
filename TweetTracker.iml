@@ -7,10 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javafx-swt" level="project" />
-    <orderEntry type="library" name="org.twitter4j:twitter4j-core:4.0.3" level="project" />
-    <orderEntry type="library" name="com.lynden:GMapsFX:2.12.0" level="project" />
-    <orderEntry type="library" name="org.twitter4j:twitter4j-stream:4.0.3" level="project" />
-    <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="javafx-swt" level="application" />
+    <orderEntry type="library" name="twitter4j-async-4.0.7" level="application" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="application" />
+    <orderEntry type="library" name="com.lynden:GMapsFX:2.12.0" level="application" />
   </component>
 </module>
