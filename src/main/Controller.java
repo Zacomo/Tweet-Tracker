@@ -1,8 +1,9 @@
 package main;
 
 import com.google.gson.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,12 +14,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Controller implements Initializable{
     @FXML
@@ -35,6 +41,8 @@ public class Controller implements Initializable{
     private ListView<String> tweetListView;
     @FXML
     private TableView<AnalyzedTweet> tweetStatsTableView;
+    @FXML
+    private WebView wordCloudWebView;
     @FXML
     private TableColumn<AnalyzedTweet,Integer> favoritedColumn;
     @FXML
@@ -99,15 +107,31 @@ public class Controller implements Initializable{
     public void popularSearch(){
         String searchText = searchBar.getText();
         if (searchText.length()>0){
+            //una nuova ricerca resetta le statistiche precedenti
+            tweetStatsTableView.getItems().clear();
             ArrayList<Status> tweets = tweetHandler.search(searchText);
             tweetListView.getItems().clear();
+            StringBuilder cloudWordText = new StringBuilder();
             int tweetCounter = 0;
+            //qui preparo i tweet da mettere nella lista e il testo da mandare alla cloudWord
             for (Status tweet: tweets){
                 tweetCounter++;
                 String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
                 tweetListView.getItems().add(text);
+                cloudWordText.append(tweet.getText());
             }
+            String text = getParsedCloudWordText(cloudWordText.toString());
+            createCloudWord(text);
         }
+    }
+
+    private String getParsedCloudWordText(String cloudWordText) {
+        String textCleared = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
+        textCleared = textCleared.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
+                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
+                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
+                "che|non|ed|ad|è)\\b"," ");
+        return textCleared;
     }
 
     @FXML
@@ -127,6 +151,40 @@ public class Controller implements Initializable{
             e.printStackTrace();
             System.out.println("Couldn't load map window");
         }
+    }
+
+    void createCloudWord(String text){
+        List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
+                .collect(Collectors.toList());
+
+        Map <String, Integer> wordCounter = list.stream()
+                .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
+        String data = "[\n";
+        for (Map.Entry<String,Integer> entry : wordCounter.entrySet()){
+            //voglio solo le parole ripetute più di 5 volte
+            if (entry.getValue() >= 5)
+            data += entry.getKey() + "," + entry.getValue() + ",\n";
+        }
+        //toglie newline e virgola alla fine
+        data = data.substring(0, data.length()-2);
+        data = data + "\n];";
+
+        System.out.println("Inizio: " + data);
+
+        WebEngine engine = wordCloudWebView.getEngine();
+        String finalData = data;
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
+            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
+                if (newState == Worker.State.SUCCEEDED){
+                    JSObject jsObject = (JSObject) engine.executeScript("window");
+                    jsObject.call("initialize", finalData);
+                    //engine.executeScript("initialize()");
+                    //qua vanno inserite le parole e la loro frequenza
+                }
+            }
+        });
+        engine.load(getClass().getResource("wordCloud.html").toString());
+        engine.setJavaScriptEnabled(true);
     }
 
     public void searchStreamTweets(){

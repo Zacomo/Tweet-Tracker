@@ -47,7 +47,7 @@
                                     </AnchorPane>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="266.0" prefWidth="603.0">
                                        <children>
-                                          <WebView layoutX="20.0" layoutY="14.0" prefHeight="416.0" prefWidth="568.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0" />
+                                          <WebView fx:id="wordCloudWebView" layoutX="20.0" layoutY="14.0" prefHeight="416.0" prefWidth="568.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="14.0" />
                                        </children>
                                     </AnchorPane>
                                 </items>
