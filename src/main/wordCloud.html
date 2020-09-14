@@ -27,17 +27,25 @@ function initialize(data1) {
 
 // create a tag (word) cloud chart
   var chart = anychart.tagCloud(data1);
+
 // set a chart title
   chart.title('Tweet Cloud Word')
-  // set an array of angles at which the words will be laid out
+
+ // set an array of angles at which the words will be laid out
   chart.angles([0])
-  // enable a color range
-  chart.colorRange(true);
-  // set the color range length
-  chart.colorRange().length('80%');
+
+ // create and configure a color scale.
+ var customColorScale = anychart.scales.linearColor();
+ customColorScale.colors(["#69b700", "#0088ff"]);
+
+// set the color scale as the color scale of the chart
+ chart.colorScale(customColorScale);
+
+// add a color range
+ chart.colorRange().enabled(true);
+
 // display the word cloud chart
   chart.container("container");
-  chart.legend("false");
   chart.draw();
 };
 </script>

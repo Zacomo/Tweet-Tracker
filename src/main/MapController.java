@@ -36,7 +36,8 @@ public class MapController implements Initializable{
             public void changed(ObservableValue ov, State oldState, State newState) {
                 if (newState == State.SUCCEEDED) {
                     engine.executeScript("initialize()");
-                    engine.executeScript("document.addMarker(40.27617, 9.40193)");
+                    //marker oliena
+                    //engine.executeScript("document.addMarker(40.27617, 9.40193)");
                     for (Position p: positions){
                         engine.executeScript("document.addMarker("+p.getLatitude()+","+p.getLongitude()+")");
                     }

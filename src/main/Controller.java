@@ -1,6 +1,7 @@
 package main;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -16,11 +17,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.json.DataObjectFactory;
+
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +40,8 @@ public class Controller implements Initializable{
     private Button streamSearchButton;
     @FXML
     private Button streamStopButton;
+    @FXML
+    private Button loadJsonButton;
     @FXML
     private Button openMapButton;
     @FXML
@@ -59,6 +66,8 @@ public class Controller implements Initializable{
     private ArrayList<Position> positions = new ArrayList<>();
 
     private JsonArray jsonTweetList;
+
+    private ArrayList<Status> tweetList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -120,8 +129,7 @@ public class Controller implements Initializable{
                 tweetListView.getItems().add(text);
                 cloudWordText.append(tweet.getText());
             }
-            String text = getParsedCloudWordText(cloudWordText.toString());
-            createCloudWord(text);
+            createCloudWord(cloudWordText.toString());
         }
     }
 
@@ -154,6 +162,7 @@ public class Controller implements Initializable{
     }
 
     void createCloudWord(String text){
+        text = getParsedCloudWordText(text);
         List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
                 .collect(Collectors.toList());
 
@@ -210,20 +219,38 @@ public class Controller implements Initializable{
             positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
     }
 
+    //permette di scegliere un file json e se il formato è corretto ne carica il contenuto
     public void loadJson(){
-        jsonTweetList = getFromJsonFile("jsonStreamTweets.json");
-    }
+        jsonTweetList = new JsonArray();
 
-    public JsonArray getFromJsonFile(String jsonFilePath){
+        String jsonFilePath = null;
+
+        FileChooser fc = new FileChooser();
+        //filtro per mostrare solo i file con estensione .json
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON files (*.json)","*.json"));
+        File selectedFile = fc.showOpenDialog(null);
+        if (selectedFile != null){
+            jsonFilePath = selectedFile.getAbsolutePath();
+        }
+        else{
+            System.out.println("Il file non è valido o non è stato selezionato");
+        }
+
         JsonParser parser = new JsonParser();
-        JsonArray jsonTweetList = new JsonArray();
         try {
             jsonTweetList = (JsonArray) parser.parse(new FileReader(jsonFilePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        JsonObject jsonObject = null;
-        return jsonTweetList;
+        //creo stringa per cloud word
+        StringBuilder tweetText = new StringBuilder();
+        for (JsonElement o: jsonTweetList){
+            tweetText.append(o.getAsJsonObject().get("text").toString());
+        }
+        createCloudWord(tweetText.toString());
+        loadTweetList();
+        System.out.println(jsonTweetList.get(1).toString());
     }
 
     //inizializza l'array positions che verrà passato alla mappa
