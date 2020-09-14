@@ -37,6 +37,8 @@ public class Controller implements Initializable{
     @FXML
     private Button popularSearchButton;
     @FXML
+    private Button operatorsDialogButton;
+    @FXML
     private Button streamSearchButton;
     @FXML
     private Button streamStopButton;
@@ -47,9 +49,9 @@ public class Controller implements Initializable{
     @FXML
     private ListView<String> tweetListView;
     @FXML
-    private TableView<AnalyzedTweet> tweetStatsTableView;
-    @FXML
     private WebView wordCloudWebView;
+    @FXML
+    private TableView<AnalyzedTweet> tweetStatsTableView;
     @FXML
     private TableColumn<AnalyzedTweet,Integer> favoritedColumn;
     @FXML
@@ -133,15 +135,6 @@ public class Controller implements Initializable{
         }
     }
 
-    private String getParsedCloudWordText(String cloudWordText) {
-        String textCleared = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
-        textCleared = textCleared.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
-                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
-                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
-                "che|non|ed|ad|è)\\b"," ");
-        return textCleared;
-    }
-
     @FXML
     void openMap(ActionEvent event){
         try{
@@ -161,39 +154,20 @@ public class Controller implements Initializable{
         }
     }
 
-    void createCloudWord(String text){
-        text = getParsedCloudWordText(text);
-        List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
-                .collect(Collectors.toList());
-
-        Map <String, Integer> wordCounter = list.stream()
-                .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
-        String data = "[\n";
-        for (Map.Entry<String,Integer> entry : wordCounter.entrySet()){
-            //voglio solo le parole ripetute più di 5 volte
-            if (entry.getValue() >= 5)
-            data += entry.getKey() + "," + entry.getValue() + ",\n";
+    public void showOperatorsDialog(){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("operatorsDialog.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            OperatorsDialogController operatorsDialogController = fxmlLoader.getController();
+            Stage stage = new Stage();
+            stage.setTitle("Operatori search");
+            stage.setScene(new Scene(root1));
+            stage.show();
         }
-        //toglie newline e virgola alla fine
-        data = data.substring(0, data.length()-2);
-        data = data + "\n];";
-
-        System.out.println("Inizio: " + data);
-
-        WebEngine engine = wordCloudWebView.getEngine();
-        String finalData = data;
-        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
-                if (newState == Worker.State.SUCCEEDED){
-                    JSObject jsObject = (JSObject) engine.executeScript("window");
-                    jsObject.call("initialize", finalData);
-                    //engine.executeScript("initialize()");
-                    //qua vanno inserite le parole e la loro frequenza
-                }
-            }
-        });
-        engine.load(getClass().getResource("wordCloud.html").toString());
-        engine.setJavaScriptEnabled(true);
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Couldn't load operators dialog");
+        }
     }
 
     public void searchStreamTweets(){
@@ -217,6 +191,50 @@ public class Controller implements Initializable{
         openMapButton.setDisable(false);
         for (Status status: tweets)
             positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
+    }
+
+    void createCloudWord(String text){
+        text = getParsedCloudWordText(text);
+        List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
+                .collect(Collectors.toList());
+
+        Map <String, Integer> wordCounter = list.stream()
+                .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
+        String data = "[\n";
+        for (Map.Entry<String,Integer> entry : wordCounter.entrySet()){
+            //voglio solo le parole ripetute più di 5 volte
+            if (entry.getValue() >= 5)
+                data += entry.getKey() + "," + entry.getValue() + ",\n";
+        }
+        //toglie newline e virgola alla fine
+        data = data.substring(0, data.length()-2);
+        data = data + "\n];";
+
+        System.out.println("Inizio: " + data);
+
+        WebEngine engine = wordCloudWebView.getEngine();
+        String finalData = data;
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
+            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
+                if (newState == Worker.State.SUCCEEDED){
+                    JSObject jsObject = (JSObject) engine.executeScript("window");
+                    jsObject.call("initialize", finalData);
+                    //engine.executeScript("initialize()");
+                    //qua vanno inserite le parole e la loro frequenza
+                }
+            }
+        });
+        engine.load(getClass().getResource("wordCloud.html").toString());
+        engine.setJavaScriptEnabled(true);
+    }
+
+    private String getParsedCloudWordText(String cloudWordText) {
+        String textCleared = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
+        textCleared = textCleared.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
+                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
+                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
+                "che|non|ed|ad|è)\\b"," ");
+        return textCleared;
     }
 
     //permette di scegliere un file json e se il formato è corretto ne carica il contenuto

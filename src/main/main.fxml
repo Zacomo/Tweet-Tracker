@@ -11,13 +11,14 @@
                 <AnchorPane fx:id="topAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="142.0" prefWidth="1228.0">
                     <children>
                         <TextField fx:id="searchBar" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="313.0" promptText="Parole chiave" />
-                        <Button fx:id="popularSearchButton" layoutX="345.0" layoutY="14.0" mnemonicParsing="false" onAction="#popularSearch" text="Popular Search" />
-                        <Button fx:id="streamSearchButton" layoutX="487.0" layoutY="14.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="Stream Search" />
+                        <Button fx:id="popularSearchButton" layoutX="333.0" layoutY="14.0" mnemonicParsing="false" onAction="#popularSearch" text="Popular Search" />
+                        <Button fx:id="streamSearchButton" layoutX="543.0" layoutY="15.0" mnemonicParsing="false" onAction="#searchStreamTweets" text="Stream Search" />
                         <Button fx:id="loadJsonButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadJson" text="Carica JSON" />
                         <Button fx:id="tweetListButton" layoutX="14.0" layoutY="63.0" mnemonicParsing="false" onAction="#loadTweetList" text="Lista Tweet" />
                         <Button fx:id="openMapButton" layoutX="132.0" layoutY="63.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
                         <Button fx:id="openChartButton" layoutX="245.0" layoutY="63.0" mnemonicParsing="false" onAction="#openChart" text="Grafici" />
-                        <Button fx:id="streamStopButton" disable="true" layoutX="614.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopSearchStream" text="Stream Stop" />
+                        <Button fx:id="streamStopButton" disable="true" layoutX="671.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopSearchStream" text="Stream Stop" />
+                  <Button fx:id="operatorsDialogButton" layoutX="438.0" layoutY="14.0" mnemonicParsing="false" onAction="#showOperatorsDialog" prefHeight="25.0" prefWidth="28.0" text="?" />
                     </children>
                 </AnchorPane>
                 <AnchorPane fx:id="bottomAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

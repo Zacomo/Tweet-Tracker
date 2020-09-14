@@ -13,7 +13,7 @@ public class AnalyzedTweet {
         this.favorited = favorited;
         this.retweeted = retweeted;
         this.followers = followers;
-        influence = favorited+retweeted+followers;
+        influence = favorited*1.25+retweeted*1.75+followers*0.25;
     }
 
     public int getTweetNumber() {
