@@ -120,12 +120,16 @@ public class Controller implements Initializable{
         if (searchText.length()>0){
             //una nuova ricerca resetta le statistiche precedenti
             tweetStatsTableView.getItems().clear();
-            ArrayList<Status> tweets = tweetHandler.search(searchText);
+            tweetList = tweetHandler.search(searchText);
+
+            Gson gson = new Gson();
+            jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
+
             tweetListView.getItems().clear();
             StringBuilder cloudWordText = new StringBuilder();
             int tweetCounter = 0;
             //qui preparo i tweet da mettere nella lista e il testo da mandare alla cloudWord
-            for (Status tweet: tweets){
+            for (Status tweet: tweetList){
                 tweetCounter++;
                 String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
                 tweetListView.getItems().add(text);
@@ -282,9 +286,14 @@ public class Controller implements Initializable{
                 //a quanto pare alcuni tweet, anche se geolocalizzati, possono avere il campo place == null
                 //if (jsonPlace!=null)
                     jsonGeoLocation = (JsonObject) ((JsonObject) o).get("geoLocation");
-                    double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
-                    double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
-                    positions.add(new Position(latitude,longitude));
+                    if (jsonGeoLocation != null){
+                        double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
+                        double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
+                        positions.add(new Position(latitude,longitude));
+                    }
+                    else{
+                        //recupero posizione da profilo??
+                    }
             }
         }
     }
@@ -305,4 +314,21 @@ public class Controller implements Initializable{
             System.out.println("Couldn't load chart window");
         }
     }
+
+    public void saveJsonTweetListToFile(){
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("jsonTweetList.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+        gson.toJson(jsonTweetList,fileWriter);
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
