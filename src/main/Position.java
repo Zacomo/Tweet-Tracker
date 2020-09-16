@@ -8,10 +8,12 @@ dà nullpointer exception se richiamato nel main controller. Non ho trovato altr
 public class Position {
     private double latitude;
     private double longitude;
+    private String description;
 
-    Position(double latitude, double longitude){
+    Position(double latitude, double longitude, String description){
         this.latitude = latitude;
         this.longitude = longitude;
+        this.description = description;
     }
 
     public double getLatitude() {
@@ -28,5 +30,13 @@ public class Position {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

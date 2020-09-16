@@ -218,12 +218,14 @@ public class Controller implements Initializable{
         //per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
         //e aggiungo il testo alla variabile per creare la cloudword
         for (Status status: tweetList){
-            cloudWordText.append(status.getText());
+            String tweetText = status.getText();
+            cloudWordText.append(tweetText);
             if (status.getGeoLocation() != null){
-                positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
+                positions.add(new Position(status.getGeoLocation().getLatitude(),
+                        status.getGeoLocation().getLongitude(), tweetText));
             }
             else if (status.getPlace()!=null){
-                updatePositionsWithBB(status.getPlace().getBoundingBoxCoordinates());
+                updatePositionsWithBB(status.getPlace().getBoundingBoxCoordinates(),tweetText);
             }
         }
         createCloudWord(cloudWordText.toString());
@@ -332,6 +334,7 @@ public class Controller implements Initializable{
 
             for (Object o: jsonTweetList) {
                 JsonObject jsonPlace = (JsonObject) ((JsonObject)o).get("place");
+                String tweetText = ((JsonObject) o).get("text").getAsString();
 
                 //a quanto pare alcuni tweet, anche se geolocalizzati, possono avere il campo place == null
                 //if (jsonPlace!=null)
@@ -339,25 +342,25 @@ public class Controller implements Initializable{
                     if (jsonGeoLocation != null){
                         double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
                         double longitude = Double.parseDouble(jsonGeoLocation.get("longitude").toString());
-                        positions.add(new Position(latitude,longitude));
+                        positions.add(new Position(latitude,longitude, tweetText));
                     }
-                    else{
+                    else if (jsonPlace != null){
                         JsonArray jsonPlaceString = jsonPlace.get("boundingBoxCoordinates").getAsJsonArray();
                         GeoLocation[][] geoLocations = gson.fromJson(jsonPlaceString, GeoLocation[][].class);
-                        updatePositionsWithBB(geoLocations);
+                        updatePositionsWithBB(geoLocations, tweetText);
                     }
             }
         }
     }
 
-    private void updatePositionsWithBB(GeoLocation[][] geoLocations) {
+    private void updatePositionsWithBB(GeoLocation[][] geoLocations, String tweetText) {
         //getBoundingBoxCoordinates restituisce una matrice 1x4, quindi [0][0],[0][1],[0][2],[0][3]
         //formula centroide per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
         double latitude = (geoLocations[0][0].getLatitude()+geoLocations[0][1].getLatitude()
                 +geoLocations[0][2].getLatitude()+geoLocations[0][3].getLatitude())/4;
         double longitude = (geoLocations[0][0].getLongitude()+geoLocations[0][1].getLongitude()
                 +geoLocations[0][2].getLongitude()+geoLocations[0][3].getLongitude())/4;
-        positions.add(new Position(latitude,longitude));
+        positions.add(new Position(latitude,longitude,tweetText));
     }
 
     public void openChart(){

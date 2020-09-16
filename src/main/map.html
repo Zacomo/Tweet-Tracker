@@ -56,9 +56,10 @@
           }
         });
       }
-      document.addMarker = function addMarker(latitude,longitude){
+      document.addMarker = function addMarker(latitude,longitude,description){
         var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(latitude,longitude)
+          position: new google.maps.LatLng(latitude,longitude),
+          title: description
         });
         marker.setMap(document.map);
       }

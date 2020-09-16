@@ -39,7 +39,13 @@ public class MapController implements Initializable{
                     //marker oliena
                     //engine.executeScript("document.addMarker(40.27617, 9.40193)");
                     for (Position p: positions){
-                        engine.executeScript("document.addMarker("+p.getLatitude()+","+p.getLongitude()+")");
+                        String markerTitle = p.getDescription();
+                        //tutti questi simboli causano problemi perché vengono interpretati come elementi di js
+                        // e non come stringa. In particolare \n e \r portano a EOF; " e ' fanno si che la stringa
+                        // termini prima del dovuto e quindi js interpreta le altre parole come parole chiave.
+                        markerTitle = markerTitle.replaceAll("\n", "").replaceAll("\r", "")
+                                .replaceAll("\"","").replaceAll("\'","");
+                        engine.executeScript("document.addMarker("+p.getLatitude()+","+p.getLongitude()+",\""+ markerTitle +"\"" +")");
                     }
                     }
             }
