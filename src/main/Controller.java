@@ -1,7 +1,6 @@
 package main;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -23,10 +22,7 @@ import netscape.javascript.JSObject;
 import twitter4j.GeoLocation;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.json.DataObjectFactory;
-
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,8 +74,11 @@ public class Controller implements Initializable{
 
     private ArrayList<Status> tweetList;
 
+    private Gson gson;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        gson = new Gson();
         favoritedColumn.setCellValueFactory(new PropertyValueFactory<>("favorited"));
         retweetedColumn.setCellValueFactory(new PropertyValueFactory<>("retweeted"));
         followersColumn.setCellValueFactory(new PropertyValueFactory<>("followers"));
@@ -91,20 +90,23 @@ public class Controller implements Initializable{
             @Override
             public void handle(MouseEvent mouseEvent) {
                 String tweet = tweetListView.getSelectionModel().getSelectedItem();
-                //recupero la numerazione del tweet nella lista
-                //rimuovo newline e break
-                tweet = tweet.replace("\n", "").replace("\r", "");
-                int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
-                        .replaceAll("#",""));
+                //l'utente potrebbe cliccare su una riga vuota
+                if (tweet!=null){
+                    //recupero la numerazione del tweet nella lista e rimuovo newline e break
+                    tweet = tweet.replace("\n", "").replace("\r", "");
+                    int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
+                            .replaceAll("#",""));
 
-                //recupero l'id del tweet dal testo
-                String id = tweet.replaceAll(".*[|| id:]","");
-                Status tweetFound = tweetHandler.searchById(id);
-                if (tweetFound!=null){
-                    AnalyzedTweet analyzedTweet = new AnalyzedTweet(tweetNumber,tweetFound.getFavoriteCount(),
-                            tweetFound.getRetweetCount(),tweetFound.getUser().getFollowersCount());
-                    tweetStatsTableView.getItems().add(analyzedTweet);
+                    //recupero l'id del tweet dal testo
+                    String id = tweet.replaceAll(".*[|| id:]","");
+                    Status tweetFound = tweetHandler.searchById(id);
+                    if (tweetFound!=null){
+                        AnalyzedTweet analyzedTweet = new AnalyzedTweet(tweetNumber,tweetFound.getFavoriteCount(),
+                                tweetFound.getRetweetCount(),tweetFound.getUser().getFollowersCount());
+                        tweetStatsTableView.getItems().add(analyzedTweet);
+                    }
                 }
+
             }
         });
     }
@@ -129,8 +131,6 @@ public class Controller implements Initializable{
             //una nuova ricerca resetta le statistiche precedenti
             tweetStatsTableView.getItems().clear();
             tweetList = tweetHandler.search(searchText);
-
-            Gson gson = new Gson();
             jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
 
             tweetListView.getItems().clear();
@@ -142,17 +142,6 @@ public class Controller implements Initializable{
                 String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
                 tweetListView.getItems().add(text);
                 cloudWordText.append(tweet.getText());
-                if (tweet.getPlace()!=null){
-                    GeoLocation[][] geoLocation = tweet.getPlace().getBoundingBoxCoordinates();
-                    int i = 0;
-                    for (GeoLocation[] g : geoLocation){
-                        for (int j = 0; j<g.length; j++)
-                            System.out.println("Array numero " + i + ", valore numero " + j + ": " + g[j] + "\n");
-                        i++;
-                    }
-
-
-                }
             }
             createCloudWord(cloudWordText.toString());
         }
@@ -201,9 +190,9 @@ public class Controller implements Initializable{
             streamStopButton.setDisable(false);
 
             String searchText = streamSearchBar.getText();
-            //if (searchText.length() > 0){
-                tweetHandler.startStreamSearch(searchText);
-            //}
+            if (searchText.length() > 0){
+                tweetHandler.startStreamSearch(searchText,tweetListView);
+            }
         } catch (TwitterException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -212,14 +201,18 @@ public class Controller implements Initializable{
     }
 
     public void stopSearchStream(){
-        ArrayList<Status> tweets = tweetHandler.stopStreamSearch();
+        tweetList = tweetHandler.stopStreamSearch();
+        jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
         streamStopButton.setDisable(true);
         streamSearchButton.setDisable(false);
         openMapButton.setDisable(false);
         openChartButton.setDisable(false);
         positions.clear();
+        StringBuilder cloudWordText = new StringBuilder();
         //per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
-        for (Status status: tweets){
+        //e aggiungo il testo alla variabile per creare la cloudword
+        for (Status status: tweetList){
+            cloudWordText.append(status.getText());
             if (status.getGeoLocation() != null){
                 positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
             }
@@ -234,6 +227,7 @@ public class Controller implements Initializable{
                 positions.add(new Position(latitude,longitude));
             }
         }
+        createCloudWord(cloudWordText.toString());
     }
 
     void createCloudWord(String text){
@@ -323,7 +317,6 @@ public class Controller implements Initializable{
         File file = fc.showSaveDialog(null);
         try {
             FileWriter fileWriter = new FileWriter(file.getAbsolutePath());
-            Gson gson = new Gson();
             fileWriter.write(gson.toJson(jsonTweetList));
             fileWriter.close();
         } catch (IOException e) {
@@ -371,21 +364,4 @@ public class Controller implements Initializable{
             System.out.println("Couldn't load chart window");
         }
     }
-
-    public void saveJsonTweetListToFile(){
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter("jsonTweetList.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Gson gson = new Gson();
-        gson.toJson(jsonTweetList,fileWriter);
-        try {
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

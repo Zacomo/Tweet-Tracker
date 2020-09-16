@@ -1,14 +1,12 @@
 package main;
 
-import com.google.gson.Gson;
+import javafx.scene.control.ListView;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TweetHandler {
 
@@ -42,7 +40,7 @@ public class TweetHandler {
         twitter = new TwitterFactory(config).getInstance();
     }
 
-    public void startStreamSearch(String searchText) throws TwitterException, IOException{
+    public void startStreamSearch(String searchText, ListView listView) throws TwitterException, IOException{
         //L'utente può inserire più parole separate da una virgola
         String[] keywords = searchText.toLowerCase().split(",");
         StatusListener listener = new StatusListener() {
@@ -51,16 +49,12 @@ public class TweetHandler {
             public void onStatus(Status status) {
                 //Il filtro per le parole va inserito qui se si usano altri filtri perché la filter query combina i filtri
                 // con un "OR", cioé ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-                String statusText = status.getText();
                 count++;
-                String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: " + statusText + "\n";
+                String text = "#" + count + ": " + status.getText() + " || id:"+status.getId();
                 streamTweets.add(status);
-                System.out.println(line);
-                fileAppend(line,"streamTweets.txt");
-
-                Gson gson = new Gson();
-                fileAppend(gson.toJson(status) + ",\n","jsonStreamTweets.json");
-                    }
+                System.out.println(text);
+                listView.getItems().add(text);
+            }
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
@@ -180,16 +174,4 @@ public class TweetHandler {
         }
 
     }
-
-    private void fileAppend(String line, String fileName){
-        try{
-            FileWriter fw = new FileWriter(fileName, true);
-            fw.write(line);
-            fw.close();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
 }
