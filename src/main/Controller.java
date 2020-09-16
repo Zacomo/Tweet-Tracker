@@ -19,6 +19,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.w3c.dom.Element;
+import org.w3c.dom.events.EventTarget;
 import twitter4j.GeoLocation;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -232,7 +234,54 @@ public class Controller implements Initializable{
     }
 
     void createCloudWord(String text){
-        text = getParsedCloudWordText(text);
+        String data = getParsedCloudWordText(text);
+
+        WebEngine engine = wordCloudWebView.getEngine();
+        String finalData = data;
+        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
+            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
+                if (newState == Worker.State.SUCCEEDED){
+                    JSObject jsObject = (JSObject) engine.executeScript("window");
+                    jsObject.call("initialize", finalData);
+                    webViewClickListener(engine, jsObject);
+                }
+            }
+        });
+        engine.load(getClass().getResource("wordCloud.html").toString());
+        engine.setJavaScriptEnabled(true);
+    }
+
+    //Questo metodo rileva i click nella cloud word e ne crea un'altra per parole correlate a quella cliccata,
+    //utilizzando il testo dei tweet che contengono la parola cliccata.
+    private void webViewClickListener(WebEngine engine, JSObject jsObject) {
+        Element cloudWordContainer = engine.getDocument().getElementById("container");
+        ((EventTarget)cloudWordContainer).addEventListener("click", e -> {
+            if (jsonTweetList!=null){
+                String clickedWord = engine.executeScript("clickedWord").toString();
+                StringBuilder cloudWordText = new StringBuilder();
+                for (JsonElement jsonElement: jsonTweetList){
+                    String text = jsonElement.getAsJsonObject().get("text").toString().toLowerCase();
+                    //se la parola cliccata nella cloud word è presente nel tweet, allora lo aggiungo al testo
+                    // per la nuova cloud word
+                    if (text.contains(clickedWord.toLowerCase()))
+                        cloudWordText.append(text);
+                }
+                jsObject.call("initialize", getParsedCloudWordText(cloudWordText.toString()));
+            }
+        }, false);
+    }
+
+    private String getParsedCloudWordText(String cloudWordText) {
+        String text = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
+        //rimuove newline e carriage return
+        text = text.replaceAll("/\\r?\\n|\\r/", "");
+        //rimuove i \n rimasti all'interno di due parole, es: ciao\nmarco -> ciao marco
+        text = text.replaceAll("\\\\n"," ");
+        text = text.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
+                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
+                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
+                "che|non|ed|ad|è)\\b", " ");
+
         List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
                 .collect(Collectors.toList());
 
@@ -245,34 +294,10 @@ public class Controller implements Initializable{
                 data += entry.getKey() + "," + entry.getValue() + ",\n";
         }
         //toglie newline e virgola alla fine
-        data = data.substring(0, data.length()-2);
+        if (data.lastIndexOf("\n")<data.length()-1)
+            data = data.substring(0, data.length()-2);
         data = data + "\n];";
-
-        System.out.println("Inizio: " + data);
-
-        WebEngine engine = wordCloudWebView.getEngine();
-        String finalData = data;
-        engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
-            public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
-                if (newState == Worker.State.SUCCEEDED){
-                    JSObject jsObject = (JSObject) engine.executeScript("window");
-                    jsObject.call("initialize", finalData);
-                    //engine.executeScript("initialize()");
-                    //qua vanno inserite le parole e la loro frequenza
-                }
-            }
-        });
-        engine.load(getClass().getResource("wordCloud.html").toString());
-        engine.setJavaScriptEnabled(true);
-    }
-
-    private String getParsedCloudWordText(String cloudWordText) {
-        String textCleared = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
-        textCleared = textCleared.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
-                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
-                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
-                "che|non|ed|ad|è)\\b", " ");
-        return textCleared;
+        return data;
     }
 
     //permette di scegliere un file json e se il formato è corretto ne carica il contenuto

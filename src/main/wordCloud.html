@@ -5,6 +5,7 @@
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
   <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
   <script>
+   var clickedWord;
 function initialize(data1) {
   /*var data = [
     {"x": "Mandarin chinese", "value": 1090000000},
@@ -46,6 +47,12 @@ function initialize(data1) {
 
 // display the word cloud chart
   chart.container("container");
+
+  //listener per i click
+   clickedWord = 'empty';
+  chart.listen("pointClick", function(e){
+   clickedWord = e.point.get("x");
+  });
   chart.draw();
 };
 </script>
