@@ -20,6 +20,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import twitter4j.GeoLocation;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.json.DataObjectFactory;
@@ -35,6 +36,8 @@ public class Controller implements Initializable{
     @FXML
     private TextField searchBar;
     @FXML
+    private TextField streamSearchBar;
+    @FXML
     private Button popularSearchButton;
     @FXML
     private Button operatorsDialogButton;
@@ -45,7 +48,11 @@ public class Controller implements Initializable{
     @FXML
     private Button loadJsonButton;
     @FXML
+    private Button saveToJsonButton;
+    @FXML
     private Button openMapButton;
+    @FXML
+    private Button openChartButton;
     @FXML
     private ListView<String> tweetListView;
     @FXML
@@ -104,6 +111,7 @@ public class Controller implements Initializable{
 
     public void loadTweetList(){
         if (jsonTweetList!=null){
+            tweetListView.getItems().clear();
             int tweetCounter = 0;
             for (JsonElement o: jsonTweetList){
                 tweetCounter++;
@@ -134,6 +142,17 @@ public class Controller implements Initializable{
                 String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
                 tweetListView.getItems().add(text);
                 cloudWordText.append(tweet.getText());
+                if (tweet.getPlace()!=null){
+                    GeoLocation[][] geoLocation = tweet.getPlace().getBoundingBoxCoordinates();
+                    int i = 0;
+                    for (GeoLocation[] g : geoLocation){
+                        for (int j = 0; j<g.length; j++)
+                            System.out.println("Array numero " + i + ", valore numero " + j + ": " + g[j] + "\n");
+                        i++;
+                    }
+
+
+                }
             }
             createCloudWord(cloudWordText.toString());
         }
@@ -178,9 +197,13 @@ public class Controller implements Initializable{
         try {
             streamSearchButton.setDisable(true);
             openMapButton.setDisable(true);
+            openChartButton.setDisable(true);
             streamStopButton.setDisable(false);
 
-            tweetHandler.startStreamSearch();
+            String searchText = streamSearchBar.getText();
+            //if (searchText.length() > 0){
+                tweetHandler.startStreamSearch(searchText);
+            //}
         } catch (TwitterException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -193,8 +216,24 @@ public class Controller implements Initializable{
         streamStopButton.setDisable(true);
         streamSearchButton.setDisable(false);
         openMapButton.setDisable(false);
-        for (Status status: tweets)
-            positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
+        openChartButton.setDisable(false);
+        positions.clear();
+        //per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
+        for (Status status: tweets){
+            if (status.getGeoLocation() != null){
+                positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
+            }
+            else if (status.getPlace()!=null){
+                //getBoundingBoxCoordinates restituisce una matrice 1x4, quindi [0][0],[0][1],[0][2],[0][3]
+                GeoLocation[][] geoLocations = status.getPlace().getBoundingBoxCoordinates();
+                //formula centroide per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
+                Double latitude = (geoLocations[0][0].getLatitude()+geoLocations[0][1].getLatitude()
+                        +geoLocations[0][2].getLatitude()+geoLocations[0][3].getLatitude())/4;
+                Double longitude = (geoLocations[0][0].getLongitude()+geoLocations[0][1].getLongitude()
+                        +geoLocations[0][2].getLongitude()+geoLocations[0][3].getLongitude())/4;
+                positions.add(new Position(latitude,longitude));
+            }
+        }
     }
 
     void createCloudWord(String text){
@@ -273,6 +312,24 @@ public class Controller implements Initializable{
         createCloudWord(tweetText.toString());
         loadTweetList();
         System.out.println(jsonTweetList.get(1).toString());
+    }
+
+    public void saveToJson(){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Salva tweet");
+        fc.setInitialFileName("myTweets");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file","*.json"));
+
+        File file = fc.showSaveDialog(null);
+        try {
+            FileWriter fileWriter = new FileWriter(file.getAbsolutePath());
+            Gson gson = new Gson();
+            fileWriter.write(gson.toJson(jsonTweetList));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     //inizializza l'array positions che verrà passato alla mappa

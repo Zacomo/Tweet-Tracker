@@ -42,44 +42,25 @@ public class TweetHandler {
         twitter = new TwitterFactory(config).getInstance();
     }
 
-    public void startStreamSearch() throws TwitterException, IOException{
-
+    public void startStreamSearch(String searchText) throws TwitterException, IOException{
+        //L'utente può inserire più parole separate da una virgola
+        String[] keywords = searchText.toLowerCase().split(",");
         StatusListener listener = new StatusListener() {
             int count = 0;
-            //devo inserire il filtro per le parole qui perché la filter query combina i filtri con un "OR", cioé
-            //ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-            String[] keywords = {"lockdown", "covid", "virus", "corona", "confinamento", "quarantena", "contagi", "tampon",
-                    "distanziamento", "mascherin", "epidemi", "fase 2", "dpcm", "decreto", "ffp", "oms", "pandemi",
-                    "smartwork", "sars", "vaccin", "stoacasa", "emergenz", "sanit", "salute", "protezion", "positiv"};
             @Override
             public void onStatus(Status status) {
+                //Il filtro per le parole va inserito qui se si usano altri filtri perché la filter query combina i filtri
+                // con un "OR", cioé ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
+                String statusText = status.getText();
+                count++;
+                String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: " + statusText + "\n";
+                streamTweets.add(status);
+                System.out.println(line);
+                fileAppend(line,"streamTweets.txt");
 
-                //Il filtro per le parole è più pesante, quindi controllo prima se è presente la posizione
-                // e se la lingua è quella italiana status.getLang().contains("it")
-                if ((status.getLang().contains("it") || status.getLang().contains("en")) &&status.getGeoLocation()!=null){
-                    String statusText = status.getText().toLowerCase().replaceAll(" ", "");
-                    System.out.println(statusText + "\n");
-
-                    //Se la posizione è presente e la lingua è quella italiana,
-                    //voglio controllare se è presente anche almeno una parola chiave
-                    //Il controllo può essere fatto in modo più efficiente con un algoritmo O(n) con n pari alla
-                    //dimensione dell'array delle keyword
-                    if (Arrays.stream(keywords).parallel().anyMatch(statusText::contains))
-                    {
-                        count++;
-                        String line = "Tweet #" + count + "| " + status.getUser().getName() + " tweeted: "
-                                + status.getText() + "| From: " + status.getGeoLocation().toString() + "\n";
-
-                        streamTweets.add(status);
-                        System.out.println(line);
-                        fileAppend(line,"streamTweets.txt");
-
-                        Gson gson = new Gson();
-                        fileAppend(gson.toJson(status) + ",\n","jsonStreamTweets.json");
+                Gson gson = new Gson();
+                fileAppend(gson.toJson(status) + ",\n","jsonStreamTweets.json");
                     }
-
-                }
-            }
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
@@ -128,11 +109,11 @@ public class TweetHandler {
         //Spain boundary box
         double[][] esBB = {{-9.39288,35.94685},{3.03948,43.74833}};
 
-        filterQuery.locations(ukBB);
+        //filterQuery.locations(ukBB);
         //filterQuery.locations(esBB);
         //filterQuery.locations(italyBB);
-
-        twitterStream.filter(filterQuery);
+        filterQuery.track(searchText);
+        twitterStream.filter(keywords);
     }
 
     public ArrayList<Status> stopStreamSearch(){
