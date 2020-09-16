@@ -184,6 +184,10 @@ public class Controller implements Initializable{
 
     public void searchStreamTweets(){
         try {
+            popularSearchButton.setDisable(true);
+            operatorsDialogButton.setDisable(true);
+            loadJsonButton.setDisable(true);
+            saveToJsonButton.setDisable(true);
             streamSearchButton.setDisable(true);
             openMapButton.setDisable(true);
             openChartButton.setDisable(true);
@@ -193,9 +197,7 @@ public class Controller implements Initializable{
             if (searchText.length() > 0){
                 tweetHandler.startStreamSearch(searchText,tweetListView);
             }
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (TwitterException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -203,10 +205,14 @@ public class Controller implements Initializable{
     public void stopSearchStream(){
         tweetList = tweetHandler.stopStreamSearch();
         jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
-        streamStopButton.setDisable(true);
+        popularSearchButton.setDisable(false);
+        operatorsDialogButton.setDisable(false);
+        loadJsonButton.setDisable(false);
+        saveToJsonButton.setDisable(false);
         streamSearchButton.setDisable(false);
         openMapButton.setDisable(false);
         openChartButton.setDisable(false);
+        streamStopButton.setDisable(true);
         positions.clear();
         StringBuilder cloudWordText = new StringBuilder();
         //per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
@@ -217,14 +223,7 @@ public class Controller implements Initializable{
                 positions.add(new Position(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude()));
             }
             else if (status.getPlace()!=null){
-                //getBoundingBoxCoordinates restituisce una matrice 1x4, quindi [0][0],[0][1],[0][2],[0][3]
-                GeoLocation[][] geoLocations = status.getPlace().getBoundingBoxCoordinates();
-                //formula centroide per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
-                Double latitude = (geoLocations[0][0].getLatitude()+geoLocations[0][1].getLatitude()
-                        +geoLocations[0][2].getLatitude()+geoLocations[0][3].getLatitude())/4;
-                Double longitude = (geoLocations[0][0].getLongitude()+geoLocations[0][1].getLongitude()
-                        +geoLocations[0][2].getLongitude()+geoLocations[0][3].getLongitude())/4;
-                positions.add(new Position(latitude,longitude));
+                updatePositionsWithBB(status.getPlace().getBoundingBoxCoordinates());
             }
         }
         createCloudWord(cloudWordText.toString());
@@ -236,7 +235,7 @@ public class Controller implements Initializable{
                 .collect(Collectors.toList());
 
         Map <String, Integer> wordCounter = list.stream()
-                .collect(Collectors.toMap(w -> w.toLowerCase(), w -> 1, Integer::sum));
+                .collect(Collectors.toMap(String::toLowerCase, w -> 1, Integer::sum));
         String data = "[\n";
         for (Map.Entry<String,Integer> entry : wordCounter.entrySet()){
             //voglio solo le parole ripetute più di 5 volte
@@ -270,7 +269,7 @@ public class Controller implements Initializable{
         textCleared = textCleared.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
                 "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
                 "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
-                "che|non|ed|ad|è)\\b"," ");
+                "che|non|ed|ad|è)\\b", " ");
         return textCleared;
     }
 
@@ -294,7 +293,8 @@ public class Controller implements Initializable{
 
         JsonParser parser = new JsonParser();
         try {
-            jsonTweetList = (JsonArray) parser.parse(new FileReader(jsonFilePath));
+            if (jsonFilePath!=null)
+                jsonTweetList = (JsonArray) parser.parse(new FileReader(jsonFilePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -342,10 +342,22 @@ public class Controller implements Initializable{
                         positions.add(new Position(latitude,longitude));
                     }
                     else{
-                        //recupero posizione da profilo??
+                        JsonArray jsonPlaceString = jsonPlace.get("boundingBoxCoordinates").getAsJsonArray();
+                        GeoLocation[][] geoLocations = gson.fromJson(jsonPlaceString, GeoLocation[][].class);
+                        updatePositionsWithBB(geoLocations);
                     }
             }
         }
+    }
+
+    private void updatePositionsWithBB(GeoLocation[][] geoLocations) {
+        //getBoundingBoxCoordinates restituisce una matrice 1x4, quindi [0][0],[0][1],[0][2],[0][3]
+        //formula centroide per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
+        double latitude = (geoLocations[0][0].getLatitude()+geoLocations[0][1].getLatitude()
+                +geoLocations[0][2].getLatitude()+geoLocations[0][3].getLatitude())/4;
+        double longitude = (geoLocations[0][0].getLongitude()+geoLocations[0][1].getLongitude()
+                +geoLocations[0][2].getLongitude()+geoLocations[0][3].getLongitude())/4;
+        positions.add(new Position(latitude,longitude));
     }
 
     public void openChart(){

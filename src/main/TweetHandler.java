@@ -1,5 +1,6 @@
 package main;
 
+import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
@@ -53,7 +54,15 @@ public class TweetHandler {
                 String text = "#" + count + ": " + status.getText() + " || id:"+status.getId();
                 streamTweets.add(status);
                 System.out.println(text);
-                listView.getItems().add(text);
+                //L'interfaccia utente non può essere aggiornata direttamente da un thread che non fa parte
+                //dell'applicazione quindi è necessario usare questo metodo.
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Aggiorno listview
+                        listView.getItems().add(text);
+                    }
+                });
             }
 
             @Override
@@ -141,8 +150,6 @@ public class TweetHandler {
             e.printStackTrace();
         }
 
-        fileUpdate(tweetsFound);
-
         return statusFound;
     }
 
@@ -161,17 +168,5 @@ public class TweetHandler {
             e.printStackTrace();
         }
         return status;
-    }
-
-    private void fileUpdate(ArrayList<String> tweetsFound){
-        try {
-            FileWriter fw = new FileWriter("tweets.txt");
-            for (String s: tweetsFound)
-                fw.write(s);
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 }

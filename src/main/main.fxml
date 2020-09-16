@@ -14,9 +14,8 @@
                         <Button fx:id="popularSearchButton" layoutX="335.0" layoutY="3.0" mnemonicParsing="false" onAction="#popularSearch" text="Popular Search" />
                         <Button fx:id="streamSearchButton" layoutX="335.0" layoutY="39.0" mnemonicParsing="false" onAction="#searchStreamTweets" prefHeight="25.0" prefWidth="96.0" text="Stream Search" />
                         <Button fx:id="loadJsonButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadJson" prefHeight="25.0" prefWidth="89.0" text="Carica JSON" />
-                        <Button fx:id="tweetListButton" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#loadTweetList" text="Lista Tweet" />
-                        <Button fx:id="openMapButton" layoutX="132.0" layoutY="100.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
-                        <Button fx:id="openChartButton" layoutX="247.0" layoutY="100.0" mnemonicParsing="false" onAction="#openChart" text="Grafici" />
+                        <Button fx:id="openMapButton" layoutX="15.0" layoutY="100.0" mnemonicParsing="false" onAction="#openMap" text="Apri mappa" />
+                        <Button fx:id="openChartButton" layoutX="107.0" layoutY="100.0" mnemonicParsing="false" onAction="#openChart" text="Grafici" />
                         <Button fx:id="streamStopButton" disable="true" layoutX="438.0" layoutY="39.0" mnemonicParsing="false" onAction="#stopSearchStream" text="Stream Stop" />
                   <Button fx:id="operatorsDialogButton" layoutX="438.0" layoutY="3.0" mnemonicParsing="false" onAction="#showOperatorsDialog" prefHeight="25.0" prefWidth="28.0" text="?" />
                   <TextField fx:id="streamSearchBar" layoutX="15.0" layoutY="39.0" prefHeight="25.0" prefWidth="313.0" promptText="Parole chiave separate da una virgola" />
