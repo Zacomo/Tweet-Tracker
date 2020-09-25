@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Controller implements Initializable{
+public class MainController implements Initializable{
     @FXML
     private TextField searchBar;
     @FXML

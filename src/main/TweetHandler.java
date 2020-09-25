@@ -1,21 +1,26 @@
 package main;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TweetHandler {
 
     //TODO: spostare su un altro file
-    private static final String CONSUMER_KEY = "slfff2BIgQe37ztXD2hJUvukG";
-    private static final String CONSUMER_SECRET = "PmqqhkRtgDdlUukgmxeeYBLyEXcrSywlyIIre1MqHKkUmdfQXT";
-    private static final String ACCESS_TOKEN = "1054492053713928193-1exVBkyuBDeTGGgPMGT9ZtL1IrLJVE";
-    private static final String ACCESS_TOKEN_SECRET = "Hc9XaQGtKPVbcVW4mdlO97sQAGZzlVNf9iATXmR9dcrpM";
+    private static String CONSUMER_KEY;
+    private static String CONSUMER_SECRET;
+    private static String ACCESS_TOKEN;
+    private static String ACCESS_TOKEN_SECRET;
 
     private final ConfigurationBuilder cb;
 
@@ -26,6 +31,20 @@ public class TweetHandler {
     private ArrayList<Status> streamTweets = new ArrayList<>();
 
     public TweetHandler(){
+        try {
+            FileReader fr = new FileReader("keys.json");
+            BufferedReader br = new BufferedReader(fr);
+            Gson gson = new Gson();
+            JsonObject keys = gson.fromJson(br.readLine(), JsonObject.class);
+            CONSUMER_KEY = keys.get("CONSUMER_KEY").getAsString();
+            CONSUMER_SECRET = keys.get("CONSUMER_SECRET").getAsString();
+            ACCESS_TOKEN = keys.get("ACCESS_TOKEN").getAsString();
+            ACCESS_TOKEN_SECRET = keys.get("ACCESS_TOKEN_SECRET").getAsString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey(CONSUMER_KEY)
