@@ -12,6 +12,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TweetHandler {
@@ -60,7 +61,7 @@ public class TweetHandler {
         twitter = new TwitterFactory(config).getInstance();
     }
 
-    public void startStreamSearch(String searchText, ListView listView) throws TwitterException, IOException{
+    public void startStreamSearch(String searchText, ListView listView, boolean localized) throws TwitterException, IOException{
         //L'utente può inserire più parole separate da una virgola
         String[] keywords = searchText.toLowerCase().split(",");
         StatusListener listener = new StatusListener() {
@@ -69,19 +70,22 @@ public class TweetHandler {
             public void onStatus(Status status) {
                 //Il filtro per le parole va inserito qui se si usano altri filtri perché la filter query combina i filtri
                 // con un "OR", cioé ottengo tweet in Italia OR tweet con le parole chiave scelte. Io voglio un AND.
-                count++;
-                String text = "#" + count + ": " + status.getText() + " || id:"+status.getId();
-                streamTweets.add(status);
-                System.out.println(text);
-                //L'interfaccia utente non può essere aggiornata direttamente da un thread che non fa parte
-                //dell'applicazione quindi è necessario usare questo metodo.
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Aggiorno listview
-                        listView.getItems().add(text);
-                    }
-                });
+                String statusText = status.getText();
+                if (Arrays.stream(keywords).parallel().anyMatch(statusText.toLowerCase()::contains)){
+                    count++;
+                    String text = "#" + count + ": " + statusText + " || id:"+status.getId();
+                    streamTweets.add(status);
+                    System.out.println(text);
+                    //L'interfaccia utente non può essere aggiornata direttamente da un thread che non fa parte
+                    //dell'applicazione quindi è necessario usare questo metodo.
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Aggiorno listview
+                            listView.getItems().add(text);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -133,9 +137,14 @@ public class TweetHandler {
 
         //filterQuery.locations(ukBB);
         //filterQuery.locations(esBB);
-        //filterQuery.locations(italyBB);
-        filterQuery.track(searchText);
-        twitterStream.filter(keywords);
+        filterQuery.locations(italyBB);
+        //se l'utente vuole tweet geolocalizzati allora uso la boundary box
+        //altrimenti, se interessato solo a determinate parole, filtro solo per parole
+        if (localized)
+            twitterStream.filter(filterQuery);
+        else
+            twitterStream.filter(keywords);
+        //filterQuery.track(searchText);
     }
 
     public ArrayList<Status> stopStreamSearch(){

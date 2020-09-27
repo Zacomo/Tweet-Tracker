@@ -27,6 +27,7 @@ public class OperatorsDialogController implements Initializable {
         ObservableList<Pair<String,String>> data = FXCollections.observableArrayList(
                 new Pair<String,String>("watching now", "contenenti sia \"watching\" che \"now\"."),
                 new Pair<String, String>("\"happy hour\"", "contenenti esattamente la frase \"happy hour\"."),
+                new Pair<String, String>("love OR hate", "contenenti \"love\" o \"hate\" o entrambi"),
                 new Pair<String, String>("beer -root", "contenenti \"beer\" ma non \"root\"."),
                 new Pair<String, String>("#haiku", "contenenti l'hashtag \"haiku\"."),
                 new Pair<String, String>("from:interior", "mandati dall'account \"interior\"."),

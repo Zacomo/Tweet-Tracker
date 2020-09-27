@@ -40,6 +40,8 @@ public class MainController implements Initializable{
     @FXML
     private Button operatorsDialogButton;
     @FXML
+    private CheckBox localizedCheckBox;
+    @FXML
     private Button streamSearchButton;
     @FXML
     private Button streamStopButton;
@@ -80,21 +82,25 @@ public class MainController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //Inizializzazione gson per parsing tweet in JSON
         gson = new Gson();
+
+        //Inizializzazione tabella statistiche
         favoritedColumn.setCellValueFactory(new PropertyValueFactory<>("favorited"));
         retweetedColumn.setCellValueFactory(new PropertyValueFactory<>("retweeted"));
         followersColumn.setCellValueFactory(new PropertyValueFactory<>("followers"));
         influenceColumn.setCellValueFactory(new PropertyValueFactory<>("influence"));
         tweetNumberColumn.setCellValueFactory(new PropertyValueFactory<>("tweetNumber"));
 
-        //Gestione click elemento lista
+        //Gestione evento click su un elemento della lista
         tweetListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 String tweet = tweetListView.getSelectionModel().getSelectedItem();
-                //l'utente potrebbe cliccare su una riga vuota
+
+                //L'utente potrebbe cliccare su una riga vuota
                 if (tweet!=null){
-                    //recupero la numerazione del tweet nella lista e rimuovo newline e break
+                    //Recupero la numerazione del tweet nella lista e rimuovo newline e break
                     tweet = tweet.replace("\n", "").replace("\r", "");
                     int tweetNumber = Integer.parseInt(tweet.replaceAll(":.*","")
                             .replaceAll("#",""));
@@ -113,13 +119,14 @@ public class MainController implements Initializable{
         });
     }
 
+    //Carica la lista dei tweet nel JsonArray
     public void loadTweetList(){
         if (jsonTweetList!=null){
             tweetListView.getItems().clear();
+            tweetStatsTableView.getItems().clear();
             int tweetCounter = 0;
             for (JsonElement o: jsonTweetList){
                 tweetCounter++;
-
                 String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString()
                         +" || id:"+o.getAsJsonObject().get("id");
                 tweetListView.getItems().add(text);
@@ -127,25 +134,22 @@ public class MainController implements Initializable{
         }
     }
 
+    //Gestisce il click sul pulsante "Popular Search"
     public void popularSearch(){
         String searchText = searchBar.getText();
+
         if (searchText.length()>0){
-            //una nuova ricerca resetta le statistiche precedenti
+            //Una nuova ricerca azzera le statistiche precedenti e rimuove i tweet attualmente in lista
             tweetStatsTableView.getItems().clear();
+            tweetListView.getItems().clear();
+
+            //Il metodo search effettua la chiamata a twitter e restituisce una lista di tweet
             tweetList = tweetHandler.search(searchText);
             jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
 
-            tweetListView.getItems().clear();
-            StringBuilder cloudWordText = new StringBuilder();
-            int tweetCounter = 0;
-            //qui preparo i tweet da mettere nella lista e il testo da mandare alla cloudWord
-            for (Status tweet: tweetList){
-                tweetCounter++;
-                String text = "#"+tweetCounter+": "+tweet.getText()+" || id:"+tweet.getId();
-                tweetListView.getItems().add(text);
-                cloudWordText.append(tweet.getText());
-            }
-            createCloudWord(cloudWordText.toString());
+            //Chiama i metodi per popolare la lista e creare la cloud word
+            loadTweetList();
+            createCloudWord();
         }
     }
 
@@ -186,27 +190,32 @@ public class MainController implements Initializable{
 
     public void searchStreamTweets(){
         try {
-            popularSearchButton.setDisable(true);
-            operatorsDialogButton.setDisable(true);
-            loadJsonButton.setDisable(true);
-            saveToJsonButton.setDisable(true);
-            streamSearchButton.setDisable(true);
-            openMapButton.setDisable(true);
-            openChartButton.setDisable(true);
-            streamStopButton.setDisable(false);
-
             String searchText = streamSearchBar.getText();
             if (searchText.length() > 0){
-                tweetHandler.startStreamSearch(searchText,tweetListView);
+
+                tweetStatsTableView.getItems().clear();
+                tweetListView.getItems().clear();
+
+                tweetHandler.startStreamSearch(searchText,tweetListView,localizedCheckBox.isSelected());
             }
         } catch (TwitterException | IOException e) {
             e.printStackTrace();
         }
+        localizedCheckBox.setDisable(true);
+        popularSearchButton.setDisable(true);
+        operatorsDialogButton.setDisable(true);
+        loadJsonButton.setDisable(true);
+        saveToJsonButton.setDisable(true);
+        streamSearchButton.setDisable(true);
+        openMapButton.setDisable(true);
+        openChartButton.setDisable(true);
+        streamStopButton.setDisable(false);
     }
 
     public void stopSearchStream(){
         tweetList = tweetHandler.stopStreamSearch();
         jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
+        localizedCheckBox.setDisable(false);
         popularSearchButton.setDisable(false);
         operatorsDialogButton.setDisable(false);
         loadJsonButton.setDisable(false);
@@ -216,12 +225,9 @@ public class MainController implements Initializable{
         openChartButton.setDisable(false);
         streamStopButton.setDisable(true);
         positions.clear();
-        StringBuilder cloudWordText = new StringBuilder();
-        //per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
-        //e aggiungo il testo alla variabile per creare la cloudword
+        //Per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
         for (Status status: tweetList){
             String tweetText = status.getText();
-            cloudWordText.append(tweetText);
             if (status.getGeoLocation() != null){
                 positions.add(new Position(status.getGeoLocation().getLatitude(),
                         status.getGeoLocation().getLongitude(), tweetText));
@@ -230,19 +236,21 @@ public class MainController implements Initializable{
                 updatePositionsWithBB(status.getPlace().getBoundingBoxCoordinates(),tweetText);
             }
         }
-        createCloudWord(cloudWordText.toString());
+        createCloudWord();
     }
 
-    void createCloudWord(String text){
-        String data = getParsedCloudWordText(text);
-
+    public void createCloudWord(){
+        StringBuilder cloudWordText = new StringBuilder();
+        for (JsonElement o: jsonTweetList){
+            cloudWordText.append(o.getAsJsonObject().get("text").toString());
+        }
         WebEngine engine = wordCloudWebView.getEngine();
-        String finalData = data;
+        String data = cloudWordText.toString();
         engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
             public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
                 if (newState == Worker.State.SUCCEEDED){
                     JSObject jsObject = (JSObject) engine.executeScript("window");
-                    jsObject.call("initialize", finalData);
+                    jsObject.call("initialize", data);
                     webViewClickListener(engine, jsObject);
                 }
             }
@@ -257,49 +265,19 @@ public class MainController implements Initializable{
         Element cloudWordContainer = engine.getDocument().getElementById("container");
         ((EventTarget)cloudWordContainer).addEventListener("click", e -> {
             if (jsonTweetList!=null){
-                String clickedWord = engine.executeScript("clickedWord").toString();
+                String clickedWord = engine.executeScript("clickedWord").toString().toLowerCase();
                 StringBuilder cloudWordText = new StringBuilder();
                 for (JsonElement jsonElement: jsonTweetList){
                     String text = jsonElement.getAsJsonObject().get("text").toString().toLowerCase();
                     //se la parola cliccata nella cloud word è presente nel tweet, allora lo aggiungo al testo
                     // per la nuova cloud word
-                    if (text.contains(clickedWord.toLowerCase()))
+                    if (text.contains(clickedWord))
                         cloudWordText.append(text);
                 }
-                jsObject.call("initialize", getParsedCloudWordText(cloudWordText.toString()));
+                jsObject.call("initialize", cloudWordText.toString());
             }
         }, false);
     }
-
-    private String getParsedCloudWordText(String cloudWordText) {
-        String text = cloudWordText.replaceAll("[^[A-zÀ-ú] ]", "");
-        //rimuove newline e carriage return
-        text = text.replaceAll("/\\r?\\n|\\r/", "");
-        //rimuove i \n rimasti all'interno di due parole, es: ciao\nmarco -> ciao marco
-        text = text.replaceAll("\\\\n"," ");
-        text = text.replaceAll("\\b(il|lo|l|la|i|gli|le|un|uno|una|di|del|dello|dell|della|dei|" +
-                "degli|delle|a|al|allo|all|alla|ai|agli|alle|da|dal|dallo|dall|dalla|dai|dagli|dalle|in|nel|nello|" +
-                "nell|nella|nei|negli|nelle|su|sul|sullo|sull|sulla|sui|sugli|sulle|con|col|coi|per|tra|fra|e|o|se|" +
-                "che|non|ed|ad|è)\\b", " ");
-
-        List <String> list = Stream.of(text).map(w -> w.split("\\s+")).flatMap(Arrays::stream)
-                .collect(Collectors.toList());
-
-        Map <String, Integer> wordCounter = list.stream()
-                .collect(Collectors.toMap(String::toLowerCase, w -> 1, Integer::sum));
-        String data = "[\n";
-        for (Map.Entry<String,Integer> entry : wordCounter.entrySet()){
-            //voglio solo le parole ripetute più di 5 volte
-            if (entry.getValue() >= 5)
-                data += entry.getKey() + "," + entry.getValue() + ",\n";
-        }
-        //toglie newline e virgola alla fine
-        if (data.lastIndexOf("\n")<data.length()-1)
-            data = data.substring(0, data.length()-2);
-        data = data + "\n];";
-        return data;
-    }
-
     //permette di scegliere un file json e se il formato è corretto ne carica il contenuto
     public void loadJson(){
         jsonTweetList = new JsonArray();
@@ -330,9 +308,8 @@ public class MainController implements Initializable{
         for (JsonElement o: jsonTweetList){
             tweetText.append(o.getAsJsonObject().get("text").toString());
         }
-        createCloudWord(tweetText.toString());
+        createCloudWord();
         loadTweetList();
-        System.out.println(jsonTweetList.get(1).toString());
     }
 
     public void saveToJson(){

@@ -27,7 +27,19 @@ function initialize(data1) {
   */
 
 // create a tag (word) cloud chart
-  var chart = anychart.tagCloud(data1);
+  var chart = anychart.tagCloud();
+  chart.data(data1, {
+   mode:"byWord",
+   maxItems:30,
+   minLength:3,
+   ignoreItems: [
+    "il","lo","l","la","i","gli","le","un","uno","una","di","del","dello","dell","della","dei",
+    "degli","delle","a","al","allo","all","alla","ai","agli","alle","da","dal","dallo","dall",
+    "dalla","dai","dagli","dalle","in","nel","nello","nell","nella","nei","negli","nelle","su",
+    "sul","sullo","sull","sulla","sui","sugli","sulle","con","col","coi","per","tra","fra","e",
+    "o","se","che","non","ed","ad","è"
+   ]
+  })
 
 // set a chart title
   chart.title('Tweet Cloud Word')

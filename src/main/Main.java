@@ -2,6 +2,7 @@ package main;
 
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,6 +16,10 @@ public class Main extends Application {
         primaryStage.setTitle("Tweet Tracker");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        primaryStage.setOnCloseRequest((ae -> {
+            Platform.exit();
+            System.exit(0);
+        }));
     }
 
 
