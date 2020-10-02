@@ -13,6 +13,8 @@ public class AnalyzedTweet {
         this.favorited = favorited;
         this.retweeted = retweeted;
         this.followers = followers;
+        //Il valore del campo influence è calcolato secondo parametri arbitrari. Sarebbe utile una ricerca approfondita
+        //per trovare un modo per calcolare questo valore e dargli maggiore significatività.
         influence = favorited*1.25+retweeted*1.75+followers*0.25;
     }
 

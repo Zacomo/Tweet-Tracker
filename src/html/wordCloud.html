@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>JavaScript Tag Cloud Chart</title>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
+  <script>
+   var clickedWord;
+function initialize(data) {
+  var chart = anychart.tagCloud();
+  chart.data(data, {
+   mode:"byWord",
+   maxItems:30,
+   minLength:3,
+   ignoreItems: [
+    "il","lo","l","la","i","gli","le","un","uno","una","di","del","dello","dell","della","dei",
+    "degli","delle","a","al","allo","all","alla","ai","agli","alle","da","dal","dallo","dall",
+    "dalla","dai","dagli","dalle","in","nel","nello","nell","nella","nei","negli","nelle","su",
+    "sul","sullo","sull","sulla","sui","sugli","sulle","con","col","coi","per","tra","fra","e",
+    "o","se","che","non","ed","ad","è"
+   ]
+  })
+  chart.title('Tweet Cloud Word')
+
+ // set an array of angles at which the words will be laid out
+  chart.angles([0])
+
+ // create and configure a color scale.
+ var customColorScale = anychart.scales.linearColor();
+ customColorScale.colors(["#69b700", "#0088ff"]);
+
+// set the color scale as the color scale of the chart
+ chart.colorScale(customColorScale);
+
+// add a color range
+ chart.colorRange().enabled(true);
+
+// display the word cloud chart
+  chart.container("container");
+
+  //listener per i click
+   clickedWord = 'empty';
+  chart.listen("pointClick", function(e){
+   clickedWord = e.point.get("x");
+  });
+  chart.draw();
+};
+</script>
+  <style>
+    html, body, #container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    }
+  </style> 
+ </head>
+  <body>
+   <div id="container"></div>
+    <script>
+        <!-- chart code will be here -->
+    </script>
+  </body>
+</html>

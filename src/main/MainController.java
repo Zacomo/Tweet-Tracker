@@ -3,6 +3,8 @@ package main;
 import com.google.gson.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,12 +25,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.events.EventTarget;
 import twitter4j.GeoLocation;
 import twitter4j.Status;
-import twitter4j.TwitterException;
+
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MainController implements Initializable{
     @FXML
@@ -70,20 +70,25 @@ public class MainController implements Initializable{
     @FXML
     private TableColumn<AnalyzedTweet,String> tweetNumberColumn;
 
-    TweetHandler tweetHandler = new TweetHandler();
+    TweetHandler tweetHandler;
 
-    private ArrayList<Position> positions = new ArrayList<>();
+    private List<Position> positions;
 
     private JsonArray jsonTweetList;
 
-    private ArrayList<Status> tweetList;
-
     private Gson gson;
+
+    ObservableList<String> tweetsObsList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Inizializzazione gson per parsing tweet in JSON
+        tweetHandler = new TweetHandler();
+        positions = new ArrayList<>();
         gson = new Gson();
+
+        tweetsObsList = FXCollections.observableList(new ArrayList<String>());
+
+        tweetListView.setItems(tweetsObsList);
 
         //Inizializzazione tabella statistiche
         favoritedColumn.setCellValueFactory(new PropertyValueFactory<>("favorited"));
@@ -122,14 +127,16 @@ public class MainController implements Initializable{
     //Carica la lista dei tweet nel JsonArray
     public void loadTweetList(){
         if (jsonTweetList!=null){
-            tweetListView.getItems().clear();
+            //tweetListView.getItems().clear();
+            tweetsObsList.clear();
             tweetStatsTableView.getItems().clear();
             int tweetCounter = 0;
             for (JsonElement o: jsonTweetList){
                 tweetCounter++;
                 String text = "#"+tweetCounter+": "+o.getAsJsonObject().get("text").toString()
                         +" || id:"+o.getAsJsonObject().get("id");
-                tweetListView.getItems().add(text);
+                //tweetListView.getItems().add(text);
+                tweetsObsList.add(text);
             }
         }
     }
@@ -139,17 +146,12 @@ public class MainController implements Initializable{
         String searchText = searchBar.getText();
 
         if (searchText.length()>0){
-            //Una nuova ricerca azzera le statistiche precedenti e rimuove i tweet attualmente in lista
-            tweetStatsTableView.getItems().clear();
-            tweetListView.getItems().clear();
-
             //Il metodo search effettua la chiamata a twitter e restituisce una lista di tweet
-            tweetList = tweetHandler.search(searchText);
-            jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
+            jsonTweetList = tweetHandler.search(searchText);
 
             //Chiama i metodi per popolare la lista e creare la cloud word
             loadTweetList();
-            createCloudWord();
+            createWordCloud();
         }
     }
 
@@ -157,7 +159,7 @@ public class MainController implements Initializable{
     void openMap(ActionEvent event){
         try{
             initializeTweetPositions();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("map.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/map.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             MapController mapController = fxmlLoader.getController();
             mapController.transferPositions(positions);
@@ -172,9 +174,10 @@ public class MainController implements Initializable{
         }
     }
 
+    //Mostra la finestra con gli operatori utilizzabili con la search per popolarità
     public void showOperatorsDialog(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("operatorsDialog.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/operatorsDialog.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             OperatorsDialogController operatorsDialogController = fxmlLoader.getController();
             Stage stage = new Stage();
@@ -188,19 +191,14 @@ public class MainController implements Initializable{
         }
     }
 
-    public void searchStreamTweets(){
-        try {
-            String searchText = streamSearchBar.getText();
-            if (searchText.length() > 0){
-
-                tweetStatsTableView.getItems().clear();
-                tweetListView.getItems().clear();
-
-                tweetHandler.startStreamSearch(searchText,tweetListView,localizedCheckBox.isSelected());
-            }
-        } catch (TwitterException | IOException e) {
-            e.printStackTrace();
+    public void streamSearch(){
+        String searchText = streamSearchBar.getText();
+        if (searchText.length() > 0){
+            tweetStatsTableView.getItems().clear();
+            tweetListView.getItems().clear();
+            tweetHandler.startStreamSearch(searchText,tweetsObsList,localizedCheckBox.isSelected());
         }
+
         localizedCheckBox.setDisable(true);
         popularSearchButton.setDisable(true);
         operatorsDialogButton.setDisable(true);
@@ -212,9 +210,9 @@ public class MainController implements Initializable{
         streamStopButton.setDisable(false);
     }
 
-    public void stopSearchStream(){
-        tweetList = tweetHandler.stopStreamSearch();
-        jsonTweetList = gson.toJsonTree(tweetList).getAsJsonArray();
+    public void stopStreamSearch(){
+        jsonTweetList = tweetHandler.stopStreamSearch();
+
         localizedCheckBox.setDisable(false);
         popularSearchButton.setDisable(false);
         operatorsDialogButton.setDisable(false);
@@ -224,28 +222,22 @@ public class MainController implements Initializable{
         openMapButton.setDisable(false);
         openChartButton.setDisable(false);
         streamStopButton.setDisable(true);
-        positions.clear();
-        //Per ogni tweet trovato, aggiungo la sua posizione più accurata nell'array positions
-        for (Status status: tweetList){
-            String tweetText = status.getText();
-            if (status.getGeoLocation() != null){
-                positions.add(new Position(status.getGeoLocation().getLatitude(),
-                        status.getGeoLocation().getLongitude(), tweetText));
-            }
-            else if (status.getPlace()!=null){
-                updatePositionsWithBB(status.getPlace().getBoundingBoxCoordinates(),tweetText);
-            }
-        }
-        createCloudWord();
+
+        initializeTweetPositions();
+        createWordCloud();
     }
 
-    public void createCloudWord(){
+    public void createWordCloud(){
+        //Creo il testo da passare alla funzione per creare la word cloud
         StringBuilder cloudWordText = new StringBuilder();
         for (JsonElement o: jsonTweetList){
             cloudWordText.append(o.getAsJsonObject().get("text").toString());
         }
-        WebEngine engine = wordCloudWebView.getEngine();
         String data = cloudWordText.toString();
+        WebEngine engine = wordCloudWebView.getEngine();
+        engine.load(getClass().getResource("/html/wordCloud.html").toString());
+        engine.setJavaScriptEnabled(true);
+        //Una volta che la pagina è stata caricata, posso chiamare i metodi per la word cloud
         engine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>(){
             public void changed(ObservableValue ov, Worker.State oldState, Worker.State newState){
                 if (newState == Worker.State.SUCCEEDED){
@@ -255,8 +247,7 @@ public class MainController implements Initializable{
                 }
             }
         });
-        engine.load(getClass().getResource("wordCloud.html").toString());
-        engine.setJavaScriptEnabled(true);
+
     }
 
     //Questo metodo rileva i click nella cloud word e ne crea un'altra per parole correlate a quella cliccata,
@@ -278,7 +269,8 @@ public class MainController implements Initializable{
             }
         }, false);
     }
-    //permette di scegliere un file json e se il formato è corretto ne carica il contenuto
+
+    //Permette di scegliere un file JSON e se il formato è corretto ne carica il contenuto
     public void loadJson(){
         jsonTweetList = new JsonArray();
 
@@ -308,10 +300,11 @@ public class MainController implements Initializable{
         for (JsonElement o: jsonTweetList){
             tweetText.append(o.getAsJsonObject().get("text").toString());
         }
-        createCloudWord();
+        createWordCloud();
         loadTweetList();
     }
 
+    //Gestisce il salvataggio dei tweet in un file JSON
     public void saveToJson(){
         FileChooser fc = new FileChooser();
         fc.setTitle("Salva tweet");
@@ -329,17 +322,15 @@ public class MainController implements Initializable{
 
     }
 
-    //inizializza l'array positions che verrà passato alla mappa
+    //inizializza la lista positions che verrà passata alla mappa per generare i marker
     public void initializeTweetPositions(){
         if (jsonTweetList!=null){
             JsonObject jsonGeoLocation = new JsonObject();
-
+            positions.clear();
             for (Object o: jsonTweetList) {
                 JsonObject jsonPlace = (JsonObject) ((JsonObject)o).get("place");
                 String tweetText = ((JsonObject) o).get("text").getAsString();
 
-                //a quanto pare alcuni tweet, anche se geolocalizzati, possono avere il campo place == null
-                //if (jsonPlace!=null)
                     jsonGeoLocation = (JsonObject) ((JsonObject) o).get("geoLocation");
                     if (jsonGeoLocation != null){
                         double latitude = Double.parseDouble(jsonGeoLocation.get("latitude").toString());
@@ -349,25 +340,25 @@ public class MainController implements Initializable{
                     else if (jsonPlace != null){
                         JsonArray jsonPlaceString = jsonPlace.get("boundingBoxCoordinates").getAsJsonArray();
                         GeoLocation[][] geoLocations = gson.fromJson(jsonPlaceString, GeoLocation[][].class);
-                        updatePositionsWithBB(geoLocations, tweetText);
+                        positions.add(positionWithBB(geoLocations, tweetText));
                     }
             }
         }
     }
-
-    private void updatePositionsWithBB(GeoLocation[][] geoLocations, String tweetText) {
+    //Dato un campo GeoLocation e una descrizione provenienti da un tweet, restituisce l'oggetto position corrispondente
+    private Position positionWithBB(GeoLocation[][] geoLocations, String tweetText) {
         //getBoundingBoxCoordinates restituisce una matrice 1x4, quindi [0][0],[0][1],[0][2],[0][3]
-        //formula centroide per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
+        //formula centro per n punti: (x1+x2+x3+x4)/4,(y1,y2,y3,y4)/4
         double latitude = (geoLocations[0][0].getLatitude()+geoLocations[0][1].getLatitude()
                 +geoLocations[0][2].getLatitude()+geoLocations[0][3].getLatitude())/4;
         double longitude = (geoLocations[0][0].getLongitude()+geoLocations[0][1].getLongitude()
                 +geoLocations[0][2].getLongitude()+geoLocations[0][3].getLongitude())/4;
-        positions.add(new Position(latitude,longitude,tweetText));
+        return new Position(latitude,longitude,tweetText);
     }
 
     public void openChart(){
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("chart.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/chart.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             ChartController chartController = fxmlLoader.getController();
             chartController.transferJsonTweets(jsonTweetList);

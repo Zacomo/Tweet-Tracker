@@ -24,7 +24,7 @@ public class ChartController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
      System.out.println("Initialize");
     }
-
+    //metodo utilizzato per passare i dati dei tweet a questo controller
     public void transferJsonTweets(JsonArray jsonTweetList){
         this.jsonTweetList = jsonTweetList;
         }
@@ -33,6 +33,9 @@ public class ChartController implements Initializable {
         HashMap<String, HashMap<String, Integer>> tweetByRegionDay = new HashMap<>();
         for (Object o: jsonTweetList){
             JsonObject jsonPlace = (JsonObject) ((JsonObject)o).get("place");
+            //TODO: il campo fullname di "place" a volte contiene i nomi delle regioni scritti in modo diverso. Occorre
+            //parsare il campo per ottenere solo i nomi corretti; tuttavia questi controlli non sono validi per le
+            //regioni di ogni nazione ma solo per quelle italiane.
             if (jsonPlace!=null && jsonPlace.get("country")!=null &&
                     jsonPlace.get("country").toString().contains("Italia") &&
                     !jsonPlace.get("fullName").toString().contains("Lacio") &&
@@ -45,7 +48,7 @@ public class ChartController implements Initializable {
                 regionName = regionName.replaceAll("\"","");
 
                 String creationDay = ((JsonObject)o).get("createdAt").toString();
-                //rimuovo tutto quello dopo la prima virgola perché la data è tipo 25 Maggio, 2020, 11:00:09 AM
+                //rimuovo tutto quello dopo la prima virgola perché la data è del tipo 25 Maggio, 2020, 11:00:09 AM
                 creationDay = creationDay.replaceAll(",.*$", "");
                 HashMap<String, Integer> dayCountMap = new HashMap<>();
                 dayCountMap.put(creationDay,0);

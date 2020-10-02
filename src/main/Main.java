@@ -1,6 +1,5 @@
 package main;
 
-import com.lynden.gmapsfx.javascript.object.LatLong;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/main.fxml"));
         primaryStage.setTitle("Tweet Tracker");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

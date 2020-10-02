@@ -2,6 +2,7 @@ package main;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.lynden.gmapsfx.javascript.object.LatLong;
@@ -19,53 +20,37 @@ import netscape.javascript.JSObject;
 
 public class MapController implements Initializable{
 
-    private static final String API_KEY = "AIzaSyC7colAtUZfXN5u1SL7WONsT_81HnMlfZc";
-
     @FXML
     public WebView mapView;
 
     private WebEngine engine;
 
-    private ArrayList<Position> positions;
+    private List<Position> positions;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         engine = mapView.getEngine();
-        //la pagina viene caricata in modo asincrono
+
+        engine.load(getClass().getResource("/html/map.html").toString());
+        engine.setJavaScriptEnabled(true);
+        JSObject window = (JSObject) engine.executeScript("window");
+        window.setMember("app", this);
+        //Una volta che la pagina è stata caricata, chiamo i metodi necessari
         engine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
             public void changed(ObservableValue ov, State oldState, State newState) {
                 if (newState == State.SUCCEEDED) {
-                    engine.executeScript("initialize()");
-                    //marker oliena
-                    //engine.executeScript("document.addMarker(40.27617, 9.40193)");
+                    engine.executeScript("initMap()");
                     for (Position p: positions){
-                        String markerTitle = p.getDescription();
-                        //tutti questi simboli causano problemi perché vengono interpretati come elementi di js
-                        // e non come stringa. In particolare \n e \r portano a EOF; " e ' fanno si che la stringa
-                        // termini prima del dovuto e quindi js interpreta le altre parole come parole chiave.
-                        markerTitle = markerTitle.replaceAll("\n", "").replaceAll("\r", "")
-                                .replaceAll("\"","").replaceAll("\'","");
-                        engine.executeScript("document.addMarker("+p.getLatitude()+","+p.getLongitude()+",\""+ markerTitle +"\"" +")");
+                          window.call("addMarker",p.getLatitude(),p.getLongitude(),p.getDescription());
                     }
                     }
             }
         });
-        engine.load(getClass().getResource("map.html").toString());
-        engine.setJavaScriptEnabled(true);
-        engine.setOnAlert(event -> showAlert(event.getData()));
-        JSObject window = (JSObject) engine.executeScript("window");
-        window.setMember("app", this);
+
     }
 
-    private void showAlert(String message) {
-        // TODO Auto-generated method stub
-        Dialog<Void> alert = new Dialog<>();
-        alert.getDialogPane().setContentText(message);
-        alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        alert.showAndWait();
-    }
-
-    public void transferPositions(ArrayList<Position> positions){
+    //Metodo utilizzato per passare le posizioni dei tweet al controller della mappa
+    public void transferPositions(List<Position> positions){
         this.positions = positions;
     }
 }

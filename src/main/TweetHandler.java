@@ -3,8 +3,8 @@ package main;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
@@ -29,7 +29,9 @@ public class TweetHandler {
 
     private Twitter twitter;
 
-    private ArrayList<Status> streamTweets = new ArrayList<>();
+    private List<Status> streamTweets = new ArrayList<>();
+
+    private Gson gson;
 
     public TweetHandler(){
         try {
@@ -59,9 +61,11 @@ public class TweetHandler {
         twitterStream = new TwitterStreamFactory(config).getInstance();
         //inizializzazione twitter search
         twitter = new TwitterFactory(config).getInstance();
+
+        gson = new Gson();
     }
 
-    public void startStreamSearch(String searchText, ListView listView, boolean localized) throws TwitterException, IOException{
+    public void startStreamSearch(String searchText, ObservableList<String> tweetsObsList, boolean localized){
         //L'utente può inserire più parole separate da una virgola
         String[] keywords = searchText.toLowerCase().split(",");
         StatusListener listener = new StatusListener() {
@@ -75,14 +79,14 @@ public class TweetHandler {
                     count++;
                     String text = "#" + count + ": " + statusText + " || id:"+status.getId();
                     streamTweets.add(status);
-                    System.out.println(text);
                     //L'interfaccia utente non può essere aggiornata direttamente da un thread che non fa parte
-                    //dell'applicazione quindi è necessario usare questo metodo.
+                    //dell'applicazione quindi è necessario usare questo metodo. Questo sistema va modificato in quanto
+                    //non è corretto che sia una classe diversa dal controller a gestire l'aspetto di un'interfaccia.
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
                             //Aggiorno listview
-                            listView.getItems().add(text);
+                            tweetsObsList.add(text);
                         }
                     });
                 }
@@ -118,8 +122,8 @@ public class TweetHandler {
         FilterQuery filterQuery = new FilterQuery();
 
         //coordinate di Roma
-        double latitude = 41.89332;
-        double longitude = 12.482932;
+        double latitude = 41.902782;
+        double longitude = 12.496366;
 
         //creerò due nuove coppie di coordinate che indicano due angoli opposti del quadrato che delimita l'area
         //in cui ricerco i tweet. Per farlo mi baserò sulle coordinate di Roma.
@@ -144,43 +148,35 @@ public class TweetHandler {
             twitterStream.filter(filterQuery);
         else
             twitterStream.filter(keywords);
-        //filterQuery.track(searchText);
     }
-
-    public ArrayList<Status> stopStreamSearch(){
+    //Chiude la comunicazione con i server di Twitter e restituisce l'array JSON dei tweet
+    public JsonArray stopStreamSearch(){
         twitterStream.cleanUp();
         twitterStream.shutdown();
-        return streamTweets;
+        return gson.toJsonTree(streamTweets).getAsJsonArray();
     }
 
-    public ArrayList<Status> search(String searchTerm){
-        ArrayList<String> tweetsFound = new ArrayList<>();
-        ArrayList<Status> statusFound = new ArrayList<>();
-
+    //Implementa la ricerca per popolarità
+    public JsonArray search(String searchTerm){
+        List<Status> tweetList = new ArrayList<>();
         Query query = new Query(searchTerm);
+        //100 è il numero massimo di tweet ottenibili con le API standard
         query.setCount(100);
-        //Utilizzo la capitale come centro per il Geocode, lat 41.8933203 long 12.4829321
+        //Utilizzo la capitale come centro per il Geocode, lat 41.902782 long 12.496366
         //Radius pari a 650km perché i punti più lontani (in linea d'aria) da Roma sono in val d'Aosta e in Sicilia
         //ed entrambi sono vicini a questo valore
-        query.setGeoCode(new GeoLocation(41.8933203, 12.4829321), 650, Query.KILOMETERS);
+        query.setGeoCode(new GeoLocation(41.902782, 12.496366), 650, Query.KILOMETERS);
         query.setLang("it");
 
         try {
-            QueryResult result = twitter.search(query);
-            int count = 0;
-            for(Status tweet: result.getTweets()){
-                count++;
-                tweetsFound.add("Tweet #" + Integer.toString(count) + ": @" + tweet.getUser().getName() + " tweeted" +
-                        "\"" + tweet.getText() + "\" \n");
-                statusFound.add(tweet);
-            }
+            tweetList = twitter.search(query).getTweets();
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-
-        return statusFound;
+        return gson.toJsonTree(tweetList).getAsJsonArray();
     }
 
+    //Dato l'id di un tweet, restituisce il tweet a cui corrisponde
     public Status searchById(String id){
         Status status = null;
         try {
